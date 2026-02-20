@@ -64,3 +64,9 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "figaro", "~> 1.3"
+
+gem "devise", "~> 5.0"
+
+gem "omniauth-github", "~> 2.0"
