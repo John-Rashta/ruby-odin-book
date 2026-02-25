@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
+  resources :requests, only: [ :create, :index, :destroy ]
+  resources :followships, only: [ :create, :destroy, :index ]
+  get "/followships/followers", to: "followships#followers"
+  get "/requests/sent", to: "requests#sent_requests"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

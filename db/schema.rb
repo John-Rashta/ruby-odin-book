@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_24_180244) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_155553) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,11 +27,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_180244) do
   create_table "requests", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "sender_id", null: false
-    t.integer "type", default: 0, null: false
+    t.integer "table_type", default: 0, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["sender_id"], name: "index_requests_on_sender_id"
-    t.index ["user_id", "sender_id", "type"], name: "index_requests_on_user_id_and_sender_id_and_type", unique: true
+    t.index ["user_id", "sender_id", "table_type"], name: "index_requests_on_user_id_and_sender_id_and_table_type", unique: true
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
