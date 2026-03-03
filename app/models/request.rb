@@ -5,5 +5,5 @@ class Request < ApplicationRecord
   enum :table_type, { follow: 0 }
   validates :user_id, :sender_id, :table_type, presence: true
   validates :table_type, inclusion: { in: %w[follow] }
-  validates :user_id, :sender_id, :id, numericality: { only_integer: true }
+  validates :user_id, :sender_id, numericality: { only_integer: true }
 end

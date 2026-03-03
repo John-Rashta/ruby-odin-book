@@ -12,17 +12,24 @@ class FollowshipsController < ApplicationController
       flash[:notice] = "Sucessfull Unfollow!"
     else
       flash[:alert] = "Failed to unfollow!"
+      head :bad_request
     end
   end
 
   def create
-    @filtered_params = follow_params
-    return flash[:alert] = "Failed to accept follow request!" unless current_user.requests.find(@filtered_params[:id])
-    @followship = current_user.followships.build(follower_id: @filtered_params[:user_id])
-    if @followship.save
+    @filtered_params = create_params
+    unless @request = current_user.requests.find(@filtered_params).includes(:sender)
+      flash[:alert] = "Failed to accept follow request!"
+      head :bad_request
+    end
+
+    @followship = current_user.followships.build(follower_id: @request.sender.id)
+    if @followship.save && @request.destroy
       flash[:notice] = "Accepted Follow!"
     else
+      @followship.destroy
       flash[:alert] = "Failed to accept follow!"
+      head :bad_request
     end
   end
 
@@ -33,6 +40,6 @@ class FollowshipsController < ApplicationController
   end
 
   def create_params
-    params.expect(request: [ :id, :user_id ])
+    params.expect(request: [ :id ])
   end
 end
