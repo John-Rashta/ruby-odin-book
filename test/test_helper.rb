@@ -16,5 +16,7 @@ module ActiveSupport
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
+    # ActiveRecord::Base.logger = Logger.new(STDOUT)
+    # ActiveRecord.verbose_query_logs = true
   end
 end

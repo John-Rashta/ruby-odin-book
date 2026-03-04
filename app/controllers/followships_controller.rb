@@ -7,7 +7,7 @@ class FollowshipsController < ApplicationController
     @followers = current_user.followers
   end
   def destroy
-    @followship = current_user.inverse_followships.find_by(destroy_params)
+    @followship = current_user.inverse_followships.find_by!(destroy_params)
     if @followship.destroy
       flash[:notice] = "Sucessfull Unfollow!"
     else
@@ -17,11 +17,7 @@ class FollowshipsController < ApplicationController
   end
 
   def create
-    @filtered_params = create_params
-    unless @request = current_user.requests.find(@filtered_params).includes(:sender)
-      flash[:alert] = "Failed to accept follow request!"
-      head :bad_request
-    end
+    @request = current_user.requests.includes(:sender).find(create_params[:id])
 
     @followship = current_user.followships.build(follower_id: @request.sender.id)
     if @followship.save && @request.destroy

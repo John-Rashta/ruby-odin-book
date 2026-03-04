@@ -24,21 +24,21 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
   test "Invalid Table Type" do
     sign_in users(:one)
     post requests_url, params: { request: { user_id: users(:two).id, table_type: "ss" } }
-    assert_response 400
+    assert_response :bad_request
     assert_equal "Something Went Wrong!", flash[:alert]
   end
 
    test "Invalid User id" do
     sign_in users(:one)
     post requests_url, params: { request: { user_id: "ASG", table_type: "follow" } }
-    assert_response 400
+    assert_response :bad_request
     assert_equal "Failed to send request!", flash[:alert]
   end
 
   test "User doesn't exist" do
     sign_in users(:one)
     post requests_url, params: { request: { user_id: 12, table_type: "follow" } }
-    assert_response 400
+    assert_response :bad_request
     assert_equal "Failed to send request!", flash[:alert]
   end
 
@@ -46,7 +46,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:one)
     post requests_url, params: { request: { user_id: users(:two).id, table_type: "follow" } }
     post requests_url, params: { request: { user_id: users(:two).id, table_type: "follow" } }
-    assert_response 400
+    assert_response :bad_request
     assert_equal "Failed to send request!", flash[:alert]
   end
 
@@ -59,7 +59,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-   test "Sucessfully delete sent request" do
+  test "Sucessfully delete sent request" do
     sign_in users(:four)
     assert_difference("Request.count", -1) do
       delete request_url(requests(:one).id)
@@ -74,7 +74,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal "Failed to delete request!", flash[:alert]
-    assert_response 400
+    assert_response :bad_request
   end
 
   test "Non-existent Id for Delete" do
@@ -84,7 +84,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal "Failed to delete request!", flash[:alert]
-    assert_response 400
+    assert_response :bad_request
   end
 
    test "Can't delete other people's requests" do
@@ -94,6 +94,6 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal "Failed to delete request!", flash[:alert]
-    assert_response 400
+    assert_response :bad_request
   end
 end
