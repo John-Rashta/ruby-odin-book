@@ -9,4 +9,5 @@ class User < ApplicationRecord
   has_many :followers, through: :followships
   has_many :inverse_followships, foreign_key: "follower_id", class_name: "Followship", dependent: :destroy
   has_many :followings, through: :inverse_followships, source: :user
+  has_many :created_posts, foreign_key: "creator_id", class_name: "Post"
 end

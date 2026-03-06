@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :requests, only: [ :create, :index, :destroy ]
   resources :followships, only: [ :create, :index ]
+  resources :posts, only: [ :create, :destroy, :update ]
   get "/followships/followers", to: "followships#followers"
   get "/requests/sent", to: "requests#sent_requests"
   delete :followships, to: "followships#destroy"

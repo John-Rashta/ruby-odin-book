@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  content: MyTextA
+  creator: two
+
+two:
+  content: MyTextB
+  creator: three
+
+three:
+  content: MyTextC
+  creator: two

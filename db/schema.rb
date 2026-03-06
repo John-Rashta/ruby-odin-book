@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_25_155553) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_05_155905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_155553) do
     t.index ["follower_id"], name: "index_followships_on_follower_id"
     t.index ["user_id", "follower_id"], name: "index_followships_on_user_id_and_follower_id", unique: true
     t.index ["user_id"], name: "index_followships_on_user_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.bigint "creator_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_posts_on_creator_id"
   end
 
   create_table "requests", force: :cascade do |t|
@@ -51,6 +59,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_155553) do
 
   add_foreign_key "followships", "users"
   add_foreign_key "followships", "users", column: "follower_id"
+  add_foreign_key "posts", "users", column: "creator_id"
   add_foreign_key "requests", "users"
   add_foreign_key "requests", "users", column: "sender_id"
 end
