@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_05_155905) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_06_165011) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_155905) do
     t.index ["follower_id"], name: "index_followships_on_follower_id"
     t.index ["user_id", "follower_id"], name: "index_followships_on_user_id_and_follower_id", unique: true
     t.index ["user_id"], name: "index_followships_on_user_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "contentable_id"
+    t.string "contentable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["contentable_id", "contentable_type", "user_id"], name: "index_likes_on_contentable_id_and_contentable_type_and_user_id", unique: true
+    t.index ["contentable_type", "contentable_id"], name: "index_likes_on_contentable"
+    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|

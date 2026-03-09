@@ -7,7 +7,6 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     post posts_url, params: { post: { content: "hello" } }
     assert_response :success
   end
-
   test "Post can't be empty" do
     sign_in users(:one)
     post posts_url, params: { post: { content: "" } }

@@ -5,18 +5,11 @@
 # below each fixture, per the syntax in the comments below
 #
 one: 
-  user: three
-  sender: four
-
-two: 
+  contentable: one (Post)
   user: one
-  sender: four
-
-three: 
-  user: two
-  sender: one
-
 # column: value
 #
-# two: {}
+two: 
+  contentable: two (Post)
+  user: three
 # column: value

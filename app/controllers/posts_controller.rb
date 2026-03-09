@@ -1,5 +1,8 @@
 class PostsController < ApplicationController
   before_action :set_own_post, only: %i[ update destroy ]
+
+  def index
+  end
   def create
     @post = current_user.created_posts.build(post_params)
     if @post.save
