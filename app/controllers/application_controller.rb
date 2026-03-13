@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   rescue_from ArgumentError, with: :handle_argument_error
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
 
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
@@ -19,6 +20,11 @@ class ApplicationController < ActionController::Base
   def handle_argument_error
     head :bad_request
     flash[:alert] = "Something Went Wrong!"
+  end
+
+  def record_not_unique
+    flash[:alert] = "Invalid Values."
+    head :bad_request
   end
 
   def record_not_found

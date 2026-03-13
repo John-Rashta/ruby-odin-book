@@ -17,7 +17,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
 
   test "Successfull Request Creation" do
     sign_in users(:one)
-    post requests_url, params: { request: { user_id: users(:two).id, table_type: "follow" } }
+    post requests_url, params: { request: { user_id: users(:four).id, table_type: "follow" } }
     assert_response :success
   end
 
