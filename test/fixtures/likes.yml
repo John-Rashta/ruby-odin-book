@@ -13,3 +13,6 @@ two:
   contentable: two (Post)
   user: three
 # column: value
+three: 
+  contentable: two (Comment)
+  user: one

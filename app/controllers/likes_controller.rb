@@ -1,6 +1,9 @@
 class LikesController < ApplicationController
   def create
-    @like = current_user.likes.build(contentable_id: params[:post_id], contentable_type: "Post")
+    @like = current_user.likes.build(
+      contentable_id: request.path.include?("post") ? params[:post_id] : params[:comment_id],
+      contentable_type: request.path.include?("post") ? "Post" : "Comment"
+    )
     if @like.save
       flash[:notice] = "Sucessfully Liked!"
     else
@@ -10,7 +13,10 @@ class LikesController < ApplicationController
   end
 
   def destroy
-    @like = current_user.likes.find_by!(contentable_id: params[:post_id], contentable_type: "Post")
+    @like = current_user.likes.find_by!(
+      contentable_id: request.path.include?("post") ? params[:post_id] : params[:comment_id],
+      contentable_type: request.path.include?("post") ? "Post" : "Comment"
+    )
     if @like.destroy
       flash[:notice] = "Sucessfully Removed Like!"
     else
