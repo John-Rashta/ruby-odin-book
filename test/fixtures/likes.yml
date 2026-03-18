@@ -7,12 +7,11 @@
 one: 
   contentable: one (Post)
   user: one
-# column: value
-#
+
 two: 
   contentable: two (Post)
   user: three
-# column: value
+
 three: 
   contentable: two (Comment)
   user: one

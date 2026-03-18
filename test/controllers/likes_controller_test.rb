@@ -6,7 +6,7 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
   # POST
   test "Successfull Like Creation Post" do
     sign_in users(:one)
-     assert_difference("Like.count", 1) do
+    assert_difference("Like.count", 1) do
       post post_likes_url(posts(:three).id)
     end
     assert_response :success
@@ -73,7 +73,7 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
   test "Successfully deleted Like To Comment" do
     sign_in users(:one)
     assert_difference("Like.count", -1) do
-      delete comment_likes_url(comment(:two).id)
+      delete comment_likes_url(comments(:two).id)
     end
     assert_response :success
   end

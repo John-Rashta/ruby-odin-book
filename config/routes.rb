@@ -1,10 +1,15 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :requests, only: [ :create, :index, :destroy ]
-  resources :followships, only: [ :create, :index ]
-  resources :posts, :comments, only: [ :create, :destroy, :update, :index ] do
+  concern :likable do
     resource :likes, only: [ :create, :destroy ]
   end
+  concern :comentable do
+    resource :comments, only: [ :create ]
+  end
+  resources :requests, only: [ :create, :index, :destroy ]
+  resources :followships, only: [ :create, :index ]
+  resources :posts, only: [ :create, :destroy, :update, :index ], concerns: [ :likable, :comentable ]
+  resources :comments, only: [ :destroy, :update ], concerns: [ :likable, :comentable ]
   get "/followships/followers", to: "followships#followers"
   get "/requests/sent", to: "requests#sent_requests"
   delete :followships, to: "followships#destroy"

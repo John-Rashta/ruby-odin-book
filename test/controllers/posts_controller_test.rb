@@ -52,7 +52,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "MyTextA", posts(:one).content
   end
 
-  test "Can't Edit To Someone Else's Post" do
+  test "Can't Edit Someone Else's Post" do
     sign_in users(:three)
     patch post_url(posts(:one).id), params: { post: { content: "DD" } }
     assert_response :not_found

@@ -9,3 +9,14 @@ two:
   content: MyStringB
   creator: two
   post: two
+
+three:
+  content: MyStringC
+  creator: one
+  post: one
+  comment: one
+
+four:
+  content: MyStringD
+  creator: one
+  post: two
