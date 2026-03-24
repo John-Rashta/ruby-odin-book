@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  after_create :set_avatar
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable
   devise :database_authenticatable, :registerable,
@@ -16,4 +17,13 @@ class User < ApplicationRecord
   has_many :liked_comments, through: :likes, source: :contentable, source_type: "Comment"
   has_many :followed, -> { where(follower_id: Current.current_user_id) }, class_name: "Followship"
   has_many :received_by_current, -> { where(sender_id: Current.current_user_id) }, class_name: "Request"
+
+  private
+  def set_avatar
+    if !avatar_url
+      hash = Digest::SHA256.hexdigest(email)
+      self.avatar_url = "https://www.gravatar.com/avatar/#{hash}"
+      self.update
+    end
+  end
 end

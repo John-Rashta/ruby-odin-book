@@ -1,6 +1,6 @@
 class Comment < ApplicationRecord
   belongs_to :creator, class_name: "User"
-  belongs_to :post
+  belongs_to :post, counter_cache: true
   belongs_to :comment, optional: true
   has_many :likes, as: :contentable, dependent: :destroy
   has_many :like_users, through: :likes, source: :user

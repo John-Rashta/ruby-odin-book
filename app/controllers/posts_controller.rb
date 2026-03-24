@@ -1,7 +1,13 @@
 class PostsController < ApplicationController
   before_action :set_own_post, only: %i[ update destroy ]
 
+  # FEED
   def index
+    @posts = Post.eager_load(:creator).where(creator_id: [ current_user.id ].concat(current_user.followings.ids))
+  end
+
+  def show
+    @post = Post.find(params[:id])
   end
   def create
     @post = current_user.created_posts.build(post_params)

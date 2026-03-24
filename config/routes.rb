@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
   resources :requests, only: [ :create, :index, :destroy ]
   resources :followships, only: [ :create, :index ]
-  resources :posts, only: [ :create, :destroy, :update, :index ], concerns: [ :likable, :comentable ]
+  resources :posts, only: [ :create, :destroy, :update, :index, :show ], concerns: [ :likable, :comentable ]
   resources :comments, only: [ :destroy, :update ], concerns: [ :likable, :comentable ]
   get "/followships/followers", to: "followships#followers"
   get "/requests/sent", to: "requests#sent_requests"

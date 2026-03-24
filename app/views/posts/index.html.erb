@@ -1,0 +1,6 @@
+<% @posts.each do |post| %>
+    <div> <%= post.content %> </div>
+    <div> <%= post.creator.username %> </div>
+    <div> <%= post.likes_count %> </div>
+    <div> <%= post.comments_count %> </div>
+<% end %>
