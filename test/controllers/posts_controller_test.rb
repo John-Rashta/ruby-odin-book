@@ -2,6 +2,17 @@ require "test_helper"
 
 class PostsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+  test "Get Posts" do
+    sign_in users(:one)
+    get posts_url
+    assert_response :success
+  end
+
+  test "Get Post" do
+    sign_in users(:one)
+    get post_url(posts(:one))
+    assert_response :success
+  end
   test "Successfull Post Creation" do
     sign_in users(:one)
     post posts_url, params: { post: { content: "hello" } }
@@ -58,5 +69,24 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
     posts(:one).reload
     assert_equal "MyTextA", posts(:one).content
+  end
+
+  # VIEWS
+  test "Posts View" do
+    sign_in users(:three)
+    get posts_url
+    assert_dom "div", "MyTextB"
+    assert_dom "div", "MyTextD"
+    assert_dom "div", "0"
+    assert_dom "div", "David"
+    assert_dom "div", "Sarah"
+  end
+
+  test "Post View" do
+    sign_in users(:one)
+    get post_url(posts(:one))
+    assert_dom "div", "MyTextA"
+    assert_dom "div", "John"
+    assert_dom "div", "0"
   end
 end

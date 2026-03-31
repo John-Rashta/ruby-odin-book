@@ -7,7 +7,7 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.find(params[:id])
+    @post = Post.eager_load(:direct_comments).find(params[:id])
   end
   def create
     @post = current_user.created_posts.build(post_params)

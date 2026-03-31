@@ -1,7 +1,26 @@
 require "test_helper"
 
 class CommentTest < ActiveSupport::TestCase
-   test "Get's likes" do
+  test "Get Creator" do
+    creator = comments(:two).creator
+    assert_equal creator, users(:two)
+  end
+
+  test "Get Post" do
+    post = comments(:two).post
+    assert_equal post, posts(:two)
+  end
+
+  test "Get Parent Comment" do
+    comment = comments(:three).comment
+    assert_equal comment, comments(:one)
+  end
+
+  test "Get Children Comments" do
+    comments = comments(:one).comments
+    assert_equal comments[0], comments(:three)
+  end
+  test "Get's likes" do
     likes = comments(:two).likes
     assert_equal likes[0], likes(:three)
   end

@@ -1,0 +1,4 @@
+<% @users.each do |user| %>
+    <div> <%= user.username %> </div>
+    <div> <%= user.followed.any? ? "Followed" : user.received_by_current.any? ? "Sent" : ""  %> </div>
+<% end  %>

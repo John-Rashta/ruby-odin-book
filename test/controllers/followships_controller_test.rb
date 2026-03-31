@@ -61,4 +61,17 @@ class FollowshipsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Record not found.", flash[:alert]
     assert_response :not_found
   end
+
+  # VIEWS
+  test "Followers View" do
+    sign_in users(:one)
+    get followships_followers_url
+    assert_dom "div", "Sarah"
+  end
+
+  test "Followings View" do
+    sign_in users(:three)
+    get followships_url
+    assert_dom "div", "David"
+  end
 end

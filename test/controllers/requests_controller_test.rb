@@ -96,4 +96,18 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Failed to delete request!", flash[:alert]
     assert_response :bad_request
   end
+  # VIEWS
+  test "Requests View" do
+    sign_in users(:three)
+    get requests_url
+    assert_dom "div", "follow"
+    assert_dom "div", "Jenny"
+  end
+
+  test "Sent Requests View" do
+    sign_in users(:four)
+    get requests_sent_url
+    assert_dom "div", "follow"
+    assert_dom "div", "Jenny"
+  end
 end

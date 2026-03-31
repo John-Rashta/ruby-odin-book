@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   concern :comentable do
     resource :comments, only: [ :create ]
   end
+  resources :users, only: [ :show, :index ]
   resources :requests, only: [ :create, :index, :destroy ]
   resources :followships, only: [ :create, :index ]
   resources :posts, only: [ :create, :destroy, :update, :index, :show ], concerns: [ :likable, :comentable ]
