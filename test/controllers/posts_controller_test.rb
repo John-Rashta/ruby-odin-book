@@ -10,7 +10,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "Get Post" do
     sign_in users(:one)
-    get post_url(posts(:one))
+    get post_url(posts(:one).id)
     assert_response :success
   end
   test "Successfull Post Creation" do
@@ -84,8 +84,10 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "Post View" do
     sign_in users(:one)
-    get post_url(posts(:one))
+    get post_url(posts(:one).id)
     assert_dom "div", "MyTextA"
+    assert_dom "div", "MyStringA"
+    assert_dom "div", "David"
     assert_dom "div", "John"
     assert_dom "div", "0"
   end

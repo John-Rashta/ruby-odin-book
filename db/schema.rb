@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_24_203326) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_01_195458) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "comments", force: :cascade do |t|
     t.bigint "comment_id"
+    t.integer "comments_count", default: 0
     t.string "content"
     t.datetime "created_at", null: false
     t.bigint "creator_id", null: false

@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :requests, only: [ :create, :index, :destroy ]
   resources :followships, only: [ :create, :index ]
   resources :posts, only: [ :create, :destroy, :update, :index, :show ], concerns: [ :likable, :comentable ]
-  resources :comments, only: [ :destroy, :update ], concerns: [ :likable, :comentable ]
+  resources :comments, only: [ :destroy, :update, :show ], concerns: [ :likable, :comentable ]
   get "/followships/followers", to: "followships#followers"
   get "/requests/sent", to: "requests#sent_requests"
   delete :followships, to: "followships#destroy"

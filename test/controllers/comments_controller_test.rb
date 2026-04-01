@@ -2,11 +2,6 @@ require "test_helper"
 
 class CommentsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
-  # test "the truth" do
-  #   assert true
-  # end
-  # CREATE A COMMENT- DELETE A COMMENT- EDIT COMMENT - MAYBE TEST LIKES ON COMMENTS- SAME TESTS AS POST?
-  # TEST ALL ASSOCIATIONS MAYBE
   test "Successfull Comment Creation" do
     sign_in users(:one)
     assert_difference("Comment.count", 1) do
@@ -81,5 +76,27 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
     comments(:one).reload
     assert_equal "MyStringA", comments(:one).content
+  end
+
+  test "Get Comment" do
+    sign_in users(:one)
+    get comment_url(comments(:one).id)
+    assert_response :success
+  end
+
+  test "Can't get comment that doesn't exist" do
+    sign_in users(:one)
+    get comment_url(55)
+    assert_response :not_found
+  end
+
+  # VIEWS
+  test "Comment View" do
+    sign_in users(:one)
+    get comment_url(comments(:one).id)
+    assert_dom "div", "MyStringA"
+    assert_dom "div", "MyStringC"
+    assert_dom "div", "David"
+    assert_dom "div", "0"
   end
 end

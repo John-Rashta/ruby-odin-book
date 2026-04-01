@@ -6,6 +6,9 @@ class CommentsController < ApplicationController
   # CHECK IF COMMENT ID IS PRESENT AND GRAB THAT AND ITS ID AND POSTID OTHERWISE BUILD DIRECT COMMENT TO POST ID
   before_action :set_own_comment, only: %i[ update destroy ]
 
+  def show
+    @comment = Comment.eager_load(:creator, comments: :creator).find(params[:id])
+  end
   def create
     create_params =
       if params.include?(:post_id)
