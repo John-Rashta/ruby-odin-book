@@ -70,3 +70,5 @@ gem "figaro", "~> 1.3"
 gem "devise", "~> 5.0"
 
 gem "omniauth-github", "~> 2.0"
+
+gem "letter_opener", group: :development
