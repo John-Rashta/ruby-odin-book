@@ -1,10 +1,10 @@
 class FollowshipsController < ApplicationController
   def index
-    @follows = current_user.followings.eager_load(:followed)
+    @follows = current_user.followings.eager_load(:followed, :follow_request_by_current)
   end
 
   def followers
-    @followers = current_user.followers.eager_load(:followed)
+    @followers = current_user.followers.eager_load(:followed, :follow_request_by_current)
   end
   def destroy
     @followship = current_user.inverse_followships.find_by!(destroy_params)

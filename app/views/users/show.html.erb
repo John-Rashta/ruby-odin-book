@@ -1,5 +1,2 @@
-<div> <%= @user.username %> </div>
-<% if @user.avatar_url %>
-    <img src=<%= @user.avatar_url %> alt="">
-<% end %>
+<%= render @user %>
 <%= render partial: "posts/post", collection: @user.created_posts %>

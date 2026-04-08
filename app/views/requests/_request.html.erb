@@ -1,2 +1,3 @@
 <div> <%= request.table_type %> </div>
 <div> <%= request.sender.username %> </div>
+<%= button_to "#{request.user.id == current_user.id ? "Reject Request" : "Cancel Request"}", request_path(request.id) , method: "delete" %>

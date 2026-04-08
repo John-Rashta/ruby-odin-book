@@ -68,15 +68,15 @@ class UserTest < ActiveSupport::TestCase
     assert_nil current_user_followship[0]
   end
 
-  test "Get's currently sent requests to user" do
+  test "Get's currently sent follow requests to user" do
     Current.current_user_id = users(:four).id
-    current_user_sent_requests = users(:one).received_by_current
+    current_user_sent_requests = users(:one).follow_request_by_current
     assert_equal current_user_sent_requests[0], requests(:two)
   end
 
-   test "Get's nothing if no sent requests" do
+   test "Get's nothing if no sent follow requests" do
     Current.current_user_id = users(:three).id
-    current_user_sent_requests = users(:one).received_by_current
+    current_user_sent_requests = users(:one).follow_request_by_current
     assert_nil current_user_sent_requests[0]
   end
 end

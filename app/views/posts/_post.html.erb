@@ -1,4 +1,7 @@
 <div> <%= post.content %> </div>
 <div> <%= post.creator.username %> </div>
+<% if user_signed_in? %>
+    <%= button_to "#{post.liked.any? ? "Liked" : "Like"}", post_likes_path(post.id) , method: "#{post.liked.any? ? "delete" : "post"}" %>
+<% end %>
 <div> <%= post.likes_count %> </div>
 <div> <%= post.comments_count %> </div>

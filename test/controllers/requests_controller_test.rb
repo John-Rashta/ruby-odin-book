@@ -102,6 +102,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     get requests_url
     assert_dom "div", "follow"
     assert_dom "div", "Jenny"
+    assert_dom "button", "Reject Request"
   end
 
   test "Sent Requests View" do
@@ -109,5 +110,6 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     get requests_sent_url
     assert_dom "div", "follow"
     assert_dom "div", "Jenny"
+    assert_dom "button", "Cancel Request"
   end
 end

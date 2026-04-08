@@ -1,4 +1,5 @@
 class RequestsController < ApplicationController
+  # DO BUTTONS TO CANCEL SENT AND REFUSE RECEIVED
   def index
     @requests = current_user.requests.includes(:sender)
   end

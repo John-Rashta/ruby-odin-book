@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_many :liked_posts, through: :likes, source: :contentable, source_type: "Post"
   has_many :liked_comments, through: :likes, source: :contentable, source_type: "Comment"
   has_many :followed, -> { where(follower_id: Current.current_user_id) }, class_name: "Followship"
-  has_many :received_by_current, -> { where(sender_id: Current.current_user_id) }, class_name: "Request"
+  has_many :follow_request_by_current, -> { where(sender_id: Current.current_user_id, table_type: "follow") }, class_name: "Request"
   validates :email, uniqueness: true
   validates :username, uniqueness: true
 end

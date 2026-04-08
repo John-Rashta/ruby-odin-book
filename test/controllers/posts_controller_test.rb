@@ -80,6 +80,8 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_dom "div", "0"
     assert_dom "div", "David"
     assert_dom "div", "Sarah"
+    assert_dom "button", "Liked"
+    assert_dom "button", "Like"
   end
 
   test "Post View" do
@@ -90,5 +92,6 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_dom "div", "David"
     assert_dom "div", "John"
     assert_dom "div", "0"
+    assert_dom "button", "Liked"
   end
 end

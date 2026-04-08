@@ -1,0 +1,11 @@
+<img src=<%= user.avatar_url %> alt="">
+<div> <%= user.username %> </div>
+<% if user.followed.any? %>
+    <%= button_to "Stop Following", followships_path , method: "delete", params: {follow: {user_id: user.id}}  %>
+<% elsif user.follow_request_by_current.any? %>
+    <%= button_to "Cancel Request", request_path(user.follow_request_by_current[0].id) , method: "delete" %>
+<% else %>
+    <%if current_user && user.id != current_user.id %>
+        <%= button_to "Follow", requests_path , method: "post", params: {request: { user_id: user.id, table_type: "follow"}}  %>
+    <% end %>
+<% end %>
