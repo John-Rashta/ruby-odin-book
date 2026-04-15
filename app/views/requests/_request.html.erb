@@ -1,3 +1,10 @@
-<div> <%= request.table_type %> </div>
-<div> <%= request.sender.username %> </div>
-<%= button_to "#{request.user.id == current_user.id ? "Reject Request" : "Cancel Request"}", request_path(request.id) , method: "delete" %>
+<div id="request-<%= request.id%>">
+    <div> <%= request.table_type %> </div>
+    <div> <%= request.sender.username %> </div>
+    <% if request.user.id == current_user.id %>
+        <% if request.table_type == "follow" %>
+            <%= button_to "Accept Request", followships_path , method: "post", params: {request: {id: request.id}} %>
+        <% end %>
+    <% end %>
+    <%= button_to "#{request.user.id == current_user.id ? "Reject Request" : "Cancel Request"}", request_path(request.id) , method: "delete" %>
+</div>

@@ -9,21 +9,29 @@ class RequestsController < ApplicationController
   end
   def destroy
     @request = Request.where(id: params[:id]).and(Request.where(user_id: current_user.id).or(Request.where(sender_id: current_user.id))).first
-    if @request && @request.destroy
-      flash[:notice] = "Sucessfully deleted request!"
-    else
-      flash[:alert] = "Failed to delete request!"
-      head :bad_request
+    respond_to do |format|
+      if @request && @request.destroy
+        flash[:notice] = "Sucessfully deleted request!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to delete request!"
+        format.html { head :bad_request }
+      end
     end
   end
 
   def create
     @request = current_user.sent_requests.build(create_params)
-    if @request.save
-      flash[:notice] = "Sucessfully sent request!"
-    else
-      flash[:alert] = "Failed to send request!"
-      head :bad_request
+    respond_to do |format|
+      if @request.save
+        flash[:notice] = "Sucessfully sent request!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to send request!"
+        format.html { head :bad_request }
+      end
     end
   end
 

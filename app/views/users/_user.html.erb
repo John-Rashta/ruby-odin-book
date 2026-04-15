@@ -1,5 +1,6 @@
 <img src=<%= user.avatar_url %> alt="">
 <div> <%= user.username %> </div>
+<div id="user-followship-<%= user.id %>">
 <% if user.followed.any? %>
     <%= button_to "Stop Following", followships_path , method: "delete", params: {follow: {user_id: user.id}}  %>
 <% elsif user.follow_request_by_current.any? %>
@@ -9,3 +10,4 @@
         <%= button_to "Follow", requests_path , method: "post", params: {request: { user_id: user.id, table_type: "follow"}}  %>
     <% end %>
 <% end %>
+</div>

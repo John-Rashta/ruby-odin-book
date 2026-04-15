@@ -8,11 +8,15 @@ class FollowshipsController < ApplicationController
   end
   def destroy
     @followship = current_user.inverse_followships.find_by!(destroy_params)
-    if @followship.destroy
-      flash[:notice] = "Sucessfull Unfollow!"
-    else
-      flash[:alert] = "Failed to unfollow!"
-      head :bad_request
+    respond_to do |format|
+      if @followship.destroy
+        flash[:notice] = "Sucessfull Unfollow!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to unfollow!"
+        format.html { head :bad_request }
+      end
     end
   end
 
@@ -20,12 +24,16 @@ class FollowshipsController < ApplicationController
     @request = current_user.requests.includes(:sender).find(create_params[:id])
 
     @followship = current_user.followships.build(follower_id: @request.sender.id)
-    if @followship.save && @request.destroy
-      flash[:notice] = "Accepted Follow!"
-    else
-      @followship.destroy
-      flash[:alert] = "Failed to accept follow!"
-      head :bad_request
+    respond_to do |format|
+      if @followship.save && @request.destroy
+        flash[:notice] = "Accepted Follow!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        @followship.destroy
+        flash[:alert] = "Failed to accept follow!"
+        format.html { head :bad_request }
+      end
     end
   end
 
