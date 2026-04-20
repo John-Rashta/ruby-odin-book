@@ -1,0 +1,4 @@
+<%= turbo_stream.remove "follows-user-#{@followship.user_id}" %>
+<%= turbo_stream.update "user-followship-#{@followship.user_id}" do %>
+    <%= button_to "Follow", requests_path , method: "post", params: {request: { user_id: @followship.user_id, table_type: "follow"}}  %>
+<% end %>

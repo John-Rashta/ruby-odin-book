@@ -23,7 +23,7 @@ class FollowshipsController < ApplicationController
   def create
     @request = current_user.requests.includes(:sender).find(create_params[:id])
 
-    @followship = current_user.followships.build(follower_id: @request.sender.id)
+    @followship = current_user.followships.includes(:sender).build(follower_id: @request.sender.id)
     respond_to do |format|
       if @followship.save && @request.destroy
         flash[:notice] = "Accepted Follow!"

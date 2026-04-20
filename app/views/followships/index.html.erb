@@ -1,3 +1,3 @@
-<% @follows.each do |follow| %>
-    <div> <%= follow.username %> </div>
-<% end %>
+<div id="follows">
+    <%= render partial: "users/user", collection: @follows, locals: {custom_start: "follows-user-"} %>
+</div>
