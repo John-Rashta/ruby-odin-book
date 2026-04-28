@@ -1,7 +1,13 @@
 <div> <%= post.content %> </div>
 <div> <%= post.creator.username %> </div>
 <% if user_signed_in? %>
-    <%= button_to "#{post.liked.any? ? "Liked" : "Like"}", post_likes_path(post.id) , method: "#{post.liked.any? ? "delete" : "post"}" %>
+    <div id="like-<%= post.creator.id %>-Post-<%= post.id %>">
+        <%= form_with url:  post_likes_path(post.id), method: "#{post.liked.any? ? "delete" : "post"}" do |form| %>
+                <%= form.button name: nil do %>
+                    <%= icon "thumbs-up", fill: "#{post.liked.any? ? "black" : "none"}" %>
+                <% end %>
+        <% end %>
+    </div>
 <% end %>
 <div> <%= post.likes_count %> </div>
 <div> <%= post.comments_count %> </div>

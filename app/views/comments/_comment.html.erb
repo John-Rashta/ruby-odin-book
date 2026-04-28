@@ -1,4 +1,13 @@
 <div> <%= comment.creator.username %> </div>
 <div> <%= comment.content %> </div>
+<% if user_signed_in? %>
+    <div id="like-<%= comment.creator.id %>-Comment-<%= comment.id %>">
+        <%= form_with url:  comment_likes_path(comment.id), method: "#{comment.liked.any? ? "delete" : "post"}" do |form| %>
+                <%= form.button name: nil do %>
+                    <%= icon "thumbs-up", fill: "#{comment.liked.any? ? "black" : "none"}" %>
+                <% end %>
+        <% end %>
+    </div>
+<% end %>
 <div> <%= comment.likes_count %> </div>
 <div> <%= comment.comments_count %> </div>

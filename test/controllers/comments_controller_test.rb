@@ -98,5 +98,6 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_dom "div", "MyStringC"
     assert_dom "div", "David"
     assert_dom "div", "0"
+    assert_dom "button", 3
   end
 end

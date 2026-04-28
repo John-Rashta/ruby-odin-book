@@ -1,0 +1,7 @@
+<%= turbo_stream.update "like-#{@like.user_id}-#{@like.contentable_type}-#{@like.contentable_id}" do %>
+    <%= form_with url: destroy_user_session_path, method: "post" do |form| %>
+        <%= form.button name: nil do %>
+            <%= icon "thumbs-up" %>
+        <% end %>
+    <% end %>
+<% end %>

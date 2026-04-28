@@ -49,7 +49,7 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
   test "Successfull Like Creation Comment" do
     sign_in users(:three)
      assert_difference("Like.count", 1) do
-      post comment_likes_url(comments(:one).id)
+      post comment_likes_path(comments(:one).id)
     end
     assert_response :success
   end
@@ -65,7 +65,7 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
   test "Can't Like Comment Twice" do
     sign_in users(:one)
     assert_difference("Like.count", 0) do
-      post comment_likes_url(comments(:two).id)
+      post comment_likes_path(comments(:two).id)
     end
     assert_response :bad_request
   end
@@ -73,7 +73,7 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
   test "Successfully deleted Like To Comment" do
     sign_in users(:one)
     assert_difference("Like.count", -1) do
-      delete comment_likes_url(comments(:two).id)
+      delete comment_likes_path(comments(:two).id)
     end
     assert_response :success
   end

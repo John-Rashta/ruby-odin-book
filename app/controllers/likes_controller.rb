@@ -1,21 +1,29 @@
 class LikesController < ApplicationController
   def create
     @like = current_user.likes.build(get_search_columns)
-    if @like.save
-      flash[:notice] = "Sucessfully Liked!"
-    else
-      flash[:alert] = "Failed to Like!"
-      head :bad_request
+    respond_to do  |format|
+      if @like.save
+        flash[:notice] = "Sucessfully Liked!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to Like!"
+        format.html { head :bad_request }
+      end
     end
   end
 
   def destroy
     @like = current_user.likes.find_by!(get_search_columns)
-    if @like.destroy
-      flash[:notice] = "Sucessfully Removed Like!"
-    else
-       flash[:alert] = "Failed to Destroy!"
-      head :bad_request
+    respond_to do  |format|
+      if @like.destroy
+        flash[:notice] = "Sucessfully Removed Like!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to Destroy!"
+        format.html { head :bad_request }
+      end
     end
   end
 
