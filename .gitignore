@@ -36,3 +36,8 @@
 
 # Ignore application configuration
 /config/application.yml
+
+app/assets/svg/*
+!app/assets/svg/icons/lucide/outline
+app/assets/svg/icons/lucide/outline/*
+!app/assets/svg/icons/lucide/outline/thumbs-up.svg
