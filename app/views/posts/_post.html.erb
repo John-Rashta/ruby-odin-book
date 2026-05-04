@@ -1,9 +1,9 @@
-<div> <%= post.content %> </div>
 <div> <%= post.creator.username %> </div>
+<div> <%= post.content %> </div>
 <% if user_signed_in? %>
-    <div id="like-<%= post.creator.id %>-Post-<%= post.id %>">
+    <div id="like-post-<%= post.id %>">
         <%= form_with url:  post_likes_path(post.id), method: "#{post.liked.any? ? "delete" : "post"}" do |form| %>
-                <%= form.button name: nil do %>
+                <%= form.button name: nil, "data-testid": "like-button-post-#{post.id}" do %>
                     <%= icon "thumbs-up", fill: "#{post.liked.any? ? "black" : "none"}" %>
                 <% end %>
         <% end %>

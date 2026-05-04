@@ -1,6 +1,6 @@
-<%= turbo_stream.update "like-#{@like.user_id}-#{@like.contentable_type}-#{@like.contentable_id}" do %>
-    <%= form_with url: destroy_user_session_path, method: "post" do |form| %>
-        <%= form.button name: nil do %>
+<%= turbo_stream.update "like-#{@like.contentable_type.downcase}-#{@like.contentable_id}" do %>
+    <%= form_with url: send("#{@like.contentable_type.downcase}_likes_path", @like.contentable_id), method: "post" do |form| %>
+        <%= form.button name: nil, "data-testid": "like-button-#{@like.contentable_type.downcase}-#{@like.contentable_id}"  do %>
             <%= icon "thumbs-up" %>
         <% end %>
     <% end %>

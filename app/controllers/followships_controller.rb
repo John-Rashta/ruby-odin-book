@@ -10,7 +10,7 @@ class FollowshipsController < ApplicationController
     @followship = current_user.inverse_followships.find_by!(destroy_params)
     respond_to do |format|
       if @followship.destroy
-        flash[:notice] = "Sucessfull Unfollow!"
+        flash.now[:notice] = "Sucessfull Unfollow!"
         format.turbo_stream
         format.html { head :ok }
       else
@@ -26,7 +26,7 @@ class FollowshipsController < ApplicationController
     @followship = current_user.followships.includes(:sender).build(follower_id: @request.sender.id)
     respond_to do |format|
       if @followship.save && @request.destroy
-        flash[:notice] = "Accepted Follow!"
+        flash.now[:notice] = "Accepted Follow!"
         format.turbo_stream
         format.html { head :ok }
       else

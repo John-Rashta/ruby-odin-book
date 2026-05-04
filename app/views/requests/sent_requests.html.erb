@@ -1,3 +1,7 @@
 <div id="sent-requests">
-    <%= render partial: "request", collection: @sent_requests %>
+    <% unless @sent_requests.empty? %>
+        <%= render partial: "request", collection: @sent_requests %>
+    <% else %>
+        <div>No sent requests yet!</div>
+    <% end %>
 </div>

@@ -11,7 +11,7 @@ class RequestsController < ApplicationController
     @request = Request.where(id: params[:id]).and(Request.where(user_id: current_user.id).or(Request.where(sender_id: current_user.id))).first
     respond_to do |format|
       if @request && @request.destroy
-        flash[:notice] = "Sucessfully deleted request!"
+        flash.now[:notice] = "Sucessfully deleted request!"
         format.turbo_stream
         format.html { head :ok }
       else
@@ -25,7 +25,7 @@ class RequestsController < ApplicationController
     @request = current_user.sent_requests.build(create_params)
     respond_to do |format|
       if @request.save
-        flash[:notice] = "Sucessfully sent request!"
+        flash.now[:notice]= "Sucessfully sent request!"
         format.turbo_stream
         format.html { head :ok }
       else

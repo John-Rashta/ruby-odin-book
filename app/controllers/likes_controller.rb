@@ -3,7 +3,7 @@ class LikesController < ApplicationController
     @like = current_user.likes.build(get_search_columns)
     respond_to do  |format|
       if @like.save
-        flash[:notice] = "Sucessfully Liked!"
+        flash.now[:notice] = "Sucessfully Liked!"
         format.turbo_stream
         format.html { head :ok }
       else
@@ -17,7 +17,7 @@ class LikesController < ApplicationController
     @like = current_user.likes.find_by!(get_search_columns)
     respond_to do  |format|
       if @like.destroy
-        flash[:notice] = "Sucessfully Removed Like!"
+        flash.now[:notice] = "Sucessfully Removed Like!"
         format.turbo_stream
         format.html { head :ok }
       else
