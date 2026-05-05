@@ -22,15 +22,21 @@ class RequestsController < ApplicationController
   end
 
   def create
-    @request = current_user.sent_requests.build(create_params)
+    params = create_params
     respond_to do |format|
-      if @request.save
-        flash.now[:notice]= "Sucessfully sent request!"
-        format.turbo_stream
-        format.html { head :ok }
-      else
-        flash[:alert] = "Failed to send request!"
+      if params[:user_id].to_i == current_user.id
+        flash[:alert] = "Can't send request to yourself!"
         format.html { head :bad_request }
+      else
+        @request = current_user.sent_requests.build(params)
+        if @request.save
+          flash.now[:notice]= "Sucessfully sent request!"
+          format.turbo_stream
+          format.html { head :ok }
+        else
+          flash[:alert] = "Failed to send request!"
+          format.html { head :bad_request }
+        end
       end
     end
   end

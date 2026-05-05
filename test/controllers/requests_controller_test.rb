@@ -28,11 +28,18 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Something Went Wrong!", flash[:alert]
   end
 
-   test "Invalid User id" do
+  test "Invalid User id" do
     sign_in users(:one)
     post requests_url, params: { request: { user_id: "ASG", table_type: "follow" } }
     assert_response :bad_request
     assert_equal "Failed to send request!", flash[:alert]
+  end
+
+  test "Can't send request to yourself" do
+    sign_in users(:one)
+    post requests_url, params: { request: { user_id: users(:one).id, table_type: "follow" } }
+    assert_response :bad_request
+    assert_equal "Can't send request to yourself!", flash[:alert]
   end
 
   test "User doesn't exist" do

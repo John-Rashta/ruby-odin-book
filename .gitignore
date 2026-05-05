@@ -45,3 +45,6 @@ app/assets/svg/icons/lucide/*
 !app/assets/svg/icons/lucide/outline
 app/assets/svg/icons/lucide/outline/*
 !app/assets/svg/icons/lucide/outline/thumbs-up.svg
+
+/quickstart.rb
+/config.rb

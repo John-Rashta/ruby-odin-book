@@ -23,6 +23,17 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_dom "button", "Stop Following"
   end
 
+  test "Show View of yourself" do
+    sign_in users(:three)
+    get user_url(users(:three).id)
+    assert_dom "div", "Sarah"
+    assert_dom "div", "MyTextB"
+    assert_dom "div", "0"
+    assert_not_dom "button", "Follow"
+    assert_not_dom "button", "Stop Following"
+    assert_not_dom "button", "Cancel Request"
+  end
+
   test "Index View" do
     sign_in users(:one)
     get users_url
