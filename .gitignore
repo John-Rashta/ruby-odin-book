@@ -48,3 +48,7 @@ app/assets/svg/icons/lucide/outline/*
 
 /quickstart.rb
 /config.rb
+/libvipstry.rb
+
+/*.png
+/*.jpg

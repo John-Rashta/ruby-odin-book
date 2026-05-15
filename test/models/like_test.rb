@@ -22,7 +22,7 @@ class LikeTest < ActiveSupport::TestCase
   test "Include passed user if he liked post" do
     Current.current_user_id = users(:one).id
     post = Post.eager_load(:liked).all
-    assert_equal post[0].liked[0], users(:one)
+    assert_equal post[0].liked[0], likes(:one)
   end
 
   test "Get liked comments" do
@@ -38,6 +38,6 @@ class LikeTest < ActiveSupport::TestCase
   test "Include passed user if he liked comment" do
     Current.current_user_id = users(:one).id
     comment = Comment.eager_load(:liked).all
-    assert_equal comment[1].liked[0], users(:one)
+    assert_equal comment[1].liked[0], likes(:three)
   end
 end
