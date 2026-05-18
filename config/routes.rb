@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  mount RailsIcons::Engine, at: '/rails_icons'
+  mount RailsIcons::Engine, at: "/rails_icons"
   devise_for :users, controllers: { registrations: "users/registrations" }
   concern :likable do
     resource :likes, only: [ :create, :destroy ]
@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :comments, only: [ :destroy, :update, :show ], concerns: [ :likable, :comentable ]
   get "/followships/followers", to: "followships#followers"
   get "/requests/sent", to: "requests#sent_requests"
+  put "/users/avatar", to: "users#change_avatar"
   delete :followships, to: "followships#destroy"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

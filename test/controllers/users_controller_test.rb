@@ -49,4 +49,18 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
       post user_registration_url, params: { user: { "username" => "bbb", "email" => "ff@aa", "password" => "123456" } }
     end
   end
+
+  test "Update Avatar" do
+    sign_in users(:one)
+    put users_avatar_url, params: { user: { avatar: file_fixture_upload("duck.jpg", "image/jpg") } }
+    assert_response :success
+    assert_equal "Sucessfully changed avatar!", flash[:notice]
+  end
+
+  test "wrong file type for Avatar" do
+    sign_in users(:one)
+    put users_avatar_url, params: { user: { avatar: file_fixture_upload("texty.txt", "text/txt") } }
+    assert_response :bad_request
+    assert_equal "Incorrect image type or image size.", flash[:alert]
+  end
 end
