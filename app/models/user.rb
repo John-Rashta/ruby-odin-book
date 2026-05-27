@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include ActiveModel::Validations
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable
   devise :database_authenticatable, :registerable,
@@ -19,18 +20,5 @@ class User < ApplicationRecord
   has_one_attached :avatar
   validates :email, uniqueness: true
   validates :username, uniqueness: true
-  validate :avatar_type
-  validate :avatar_size
-
-  def avatar_type
-    if avatar.attached? && ![ "image/jpg", "image/jpeg", "image/png", "image/webp" ].include?(avatar.content_type)
-      errors.add(:avatar, "Type has to be JPG, JPEG, PNG or WEBP")
-    end
-  end
-
-  def avatar_size
-    if avatar.attached? && avatar.byte_size > 5.megabytes
-      errors.add(:avatar, "Image size limit is 5MB.")
-    end
-  end
+  validates_with ImageValidator, custom_type: "avatar"
 end

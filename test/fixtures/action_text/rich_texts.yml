@@ -1,0 +1,16 @@
+one:
+   record: one (PostContent)
+   name: content
+   body: <p>My<i>Text</i>A</p>
+two:
+   record: two (PostContent)
+   name: content
+   body: <p>My<i>Text</i>B</p>
+three:
+   record: three (PostContent)
+   name: content
+   body: <p>My<i>Text</i>C</p>
+four:
+   record: four (PostContent)
+   name: content
+   body: <p>My<i>Text</i>D</p>

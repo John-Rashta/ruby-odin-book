@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_05_150844) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_26_194600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
@@ -77,14 +87,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_150844) do
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
+  create_table "post_contents", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "post_images", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "posts", force: :cascade do |t|
     t.integer "comments_count", default: 0
-    t.text "content"
     t.datetime "created_at", null: false
     t.bigint "creator_id", null: false
     t.integer "likes_count", default: 0
+    t.bigint "postable_id"
+    t.string "postable_type"
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_posts_on_creator_id"
+    t.index ["postable_type", "postable_id"], name: "index_posts_on_postable"
   end
 
   create_table "requests", force: :cascade do |t|

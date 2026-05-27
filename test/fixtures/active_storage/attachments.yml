@@ -1,0 +1,4 @@
+one_image:
+  name: image
+  record: one (PostImage)
+  blob: one_image_blob

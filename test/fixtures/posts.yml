@@ -1,21 +1,21 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  content: MyTextA
+  postable: one (PostContent)
   creator: two
 
 two:
-  content: MyTextB
+  postable: two (PostContent)
   creator: three
 
 three:
-  content: MyTextC
-  creator: two
+  postable: three (PostContent)
+  creator: two 
 
 four:
-  content: MyTextD
+  postable: four (PostContent)
   creator: one
 
 five:
-  content: MyTextE
+  postable: one (PostImage)
   creator: one

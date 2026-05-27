@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_own_post, only: %i[ update destroy ]
+  before_action :validate_params, only: %i[ update create ]
 
   # FEED
   def index
@@ -10,8 +11,8 @@ class PostsController < ApplicationController
     @post = Post.eager_load(:creator, direct_comments: :creator).find(params[:id])
   end
   def create
-    @post = current_user.created_posts.build(post_params)
-    if @post.save
+    @post = current_user.created_posts.build(postable: ContentCreation.new.create_content(post_params))
+    if @post.postable.valid? && @post.save && @post.postable.save
       flash[:notice] = "Sucessfully created post!"
     else
       flash[:alert] = "Failed to create post!"
@@ -29,7 +30,8 @@ class PostsController < ApplicationController
   end
 
   def update
-    if @post.update(post_params)
+    ContentCreation.new.create_or_update_content(@post, post_params)
+    if @post.save && @post.postable.save
       flash[:notice] = "Sucessfully updated post!"
     else
       flash[:alert] = "Failed to update post!"
@@ -44,6 +46,19 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.expect(post: [ :content ])
+    if params.has_key?(:post) && params[:post].has_key?(:image)
+      params.expect(post: [ :image ])
+    elsif params.has_key?(:post) && params[:post].has_key?(:content)
+      params.expect(post: [ :content ])
+    end
+  end
+
+  def validate_params
+    params = post_params
+    validation = helpers.validate_params(params)
+    unless validation[:valid]
+      flash[:alert] = validation[:message]
+      head 400
+    end
   end
 end
