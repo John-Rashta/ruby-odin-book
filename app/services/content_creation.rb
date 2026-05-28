@@ -22,7 +22,7 @@ class ContentCreation
     end
   end
 
-  def create_or_update_content(post, params)
+  def update_or_replace_content(post, params)
     unless patch_content_if_same(post, params)
       post.postable.destroy
       post.postable = create_content(params)

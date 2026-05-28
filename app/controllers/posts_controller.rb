@@ -30,7 +30,7 @@ class PostsController < ApplicationController
   end
 
   def update
-    ContentCreation.new.create_or_update_content(@post, post_params)
+    ContentCreation.new.update_or_replace_content(@post, post_params)
     if @post.save && @post.postable.save
       flash[:notice] = "Sucessfully updated post!"
     else
