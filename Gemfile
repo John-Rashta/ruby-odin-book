@@ -79,3 +79,5 @@ gem "rails_icons", "~> 1.8"
 gem "cloudinary"
 
 gem "ruby-vips"
+
+gem "tailwindcss-rails", "~> 4.4"

@@ -52,3 +52,5 @@ app/assets/svg/icons/lucide/outline/*
 
 /*.png
 /*.jpg
+/app/assets/builds/*
+!/app/assets/builds/.keep
