@@ -1,6 +1,6 @@
 class LikesController < ApplicationController
   def create
-    @like = current_user.likes.build(get_search_columns)
+    @like = current_user.likes.includes(:contentable).build(get_search_columns)
     respond_to do  |format|
       if @like.save
         flash.now[:notice] = "Sucessfully Liked!"
@@ -14,7 +14,7 @@ class LikesController < ApplicationController
   end
 
   def destroy
-    @like = current_user.likes.find_by!(get_search_columns)
+    @like = current_user.likes.includes(:contentable).find_by!(get_search_columns)
     respond_to do  |format|
       if @like.destroy
         flash.now[:notice] = "Sucessfully Removed Like!"

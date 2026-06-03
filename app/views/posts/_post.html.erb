@@ -1,17 +1,19 @@
-<div> <%= post.creator.username %> </div>
-<% if post.postable_type == "PostImage" %>
-    <%= image_tag post.postable.image %>
-<% else %>
-    <div> <%= post.postable&.content %> </div>
-<% end %>
-<% if user_signed_in? %>
-    <div id="like-post-<%= post.id %>">
-        <%= form_with url:  post_likes_path(post.id), method: "#{post.liked.any? ? "delete" : "post"}" do |form| %>
-                <%= form.button name: nil, "data-testid": "like-button-post-#{post.id}" do %>
-                    <%= icon "thumbs-up", fill: "#{post.liked.any? ? "black" : "none"}" %>
-                <% end %>
-        <% end %>
-    </div>
-<% end %>
-<div> <%= post.likes_count %> </div>
-<div> <%= post.comments_count %> </div>
+<div id="post-<%= post.id %>">
+    <div> <%= post.creator.username %> </div>
+    <% if post.postable_type == "PostImage" %>
+        <%= image_tag post.postable.image %>
+    <% else %>
+        <div> <%= post.postable&.content %> </div>
+    <% end %>
+    <% if user_signed_in? %>
+        <div id="like-post-<%= post.id %>">
+            <%= form_with url:  post_likes_path(post.id), method: "#{post.liked.any? ? "delete" : "post"}" do |form| %>
+                    <%= form.button name: nil, "data-testid": "like-button-post-#{post.id}" do %>
+                        <%= icon "thumbs-up", fill: "#{post.liked.any? ? "black" : "none"}" %>
+                    <% end %>
+            <% end %>
+        </div>
+    <% end %>
+    <div id="like-post-number-<%= post.id %>"> <%= post.likes_count %> </div>
+    <div> <%= post.comments_count %> </div>
+</div>

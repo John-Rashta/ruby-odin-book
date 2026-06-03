@@ -4,7 +4,8 @@ class PostsController < ApplicationController
 
   # FEED
   def index
-    @posts = Post.eager_load(:creator).where(creator_id: [ current_user.id ].concat(current_user.followings.ids))
+    @posts = Post.eager_load(:creator).order(created_at: :desc).where(creator_id: [ current_user.id ].concat(current_user.followings.ids))
+    @post = Post.new
   end
 
   def show
@@ -12,20 +13,28 @@ class PostsController < ApplicationController
   end
   def create
     @post = current_user.created_posts.build(postable: ContentCreation.new.create_content(post_params))
-    if @post.postable.valid? && @post.save && @post.postable.save
-      flash[:notice] = "Sucessfully created post!"
-    else
-      flash[:alert] = "Failed to create post!"
-      head :bad_request
+    respond_to do |format|
+      if @post.postable.valid? && @post.save && @post.postable.save
+        flash[:notice] = "Sucessfully created post!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to create post!"
+        format.html { head :bad_request }
+      end
     end
   end
 
   def destroy
-    if @post.destroy
-      flash[:notice] = "Sucessfully deleted post!"
-    else
-      flash[:alert] = "Failed to delete post!"
-      head :bad_request
+    respond_to do |format|
+      if @post.destroy
+        flash[:notice] = "Sucessfully deleted post!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to delete post!"
+        format.html { head :bad_request }
+      end
     end
   end
 

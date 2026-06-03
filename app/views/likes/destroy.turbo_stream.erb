@@ -5,3 +5,6 @@
         <% end %>
     <% end %>
 <% end %>
+<%= turbo_stream.update "like-#{@like.contentable_type.downcase}-number-#{@like.contentable_id}" do %>
+    <%= @like.contentable.likes_count %>
+<% end %>
