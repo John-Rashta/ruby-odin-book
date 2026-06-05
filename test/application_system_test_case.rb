@@ -1,7 +1,7 @@
 require "test_helper"
 WINDOWS_HOST = `cat /etc/resolv.conf | grep nameserver | awk '{ print $2 }'`.strip
 # STILL HAVENT FIGURED OUT HOW TO SET THE DRIVER PORT- IT RANDOMIZES EVERY TIME
-CHROMEDRIVER_URL = "http://#{WINDOWS_HOST}:52341/"
+CHROMEDRIVER_URL = "http://#{WINDOWS_HOST}:9515/"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # driven_by :selenium, using: :headless_chrome, screen_size: [ 1400, 1400 ]

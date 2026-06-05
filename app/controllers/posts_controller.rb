@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_own_post, only: %i[ update destroy ]
+  before_action :set_own_post, only: %i[ update destroy edit ]
   before_action :validate_params, only: %i[ update create ]
 
   # FEED
@@ -10,6 +10,13 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.eager_load(:creator, direct_comments: :creator).find(params[:id])
+  end
+
+  def part
+    @post = current_user.created_posts.eager_load(:creator).find(params[:id])
+  end
+
+  def edit
   end
   def create
     @post = current_user.created_posts.build(postable: ContentCreation.new.create_content(post_params))

@@ -139,7 +139,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_dom "div", "0"
     assert_dom "div", "David"
     assert_dom "div", "Sarah"
-    assert_dom "button", 4
+    assert_dom "button", 5
   end
 
   test "Post View" do
