@@ -1,0 +1,9 @@
+<%= turbo_stream.remove "comment-#{@comment.id}" %>
+<% if @comment.comment_id.is_a?(Numeric) %>
+    <%= turbo_stream.update "comments-comment-number-#{@comment.comment_id}" do %>
+        <%= @comment.comment.comments_count %>
+    <% end %>
+<% end %>
+<%= turbo_stream.update "comments-post-number-#{@comment.post_id}" do %>
+    <%= @comment.post.comments_count %>
+<% end %>

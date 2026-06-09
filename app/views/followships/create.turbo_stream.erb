@@ -1,2 +1,2 @@
-<%= turbo_stream.append "followers", @followship.sender, custom_start: "followers-user-" %>
+<%= turbo_stream.append "followers", @followship.follower, custom_start: "followers-user-" %>
 <%= turbo_stream.remove "request-#{@request.id}" %>

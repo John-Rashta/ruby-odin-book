@@ -4,10 +4,17 @@ class CommentsController < ApplicationController
   # COMMENTS NESTED IN POSTS AND ALSO COMMENTS NESTED IN COMMENTS- DO IT SEPARATE- USE NAMESPACES OR SOMETHING
   # PROBABLY CHANGE NAMES CAUSE COMMENTS/ID/COMMENTS LOOKS BAD
   # CHECK IF COMMENT ID IS PRESENT AND GRAB THAT AND ITS ID AND POSTID OTHERWISE BUILD DIRECT COMMENT TO POST ID
-  before_action :set_own_comment, only: %i[ update destroy ]
+  before_action :set_own_comment, only: %i[ update edit ]
 
   def show
-    @comment = Comment.eager_load(:creator, comments: :creator).find(params[:id])
+    @comment = Comment.eager_load(:creator, comments: :creator).order("comments_comments.created_at": :desc).find(params[:id])
+  end
+
+  def edit
+  end
+
+  def part
+    @comment = current_user.created_comments.eager_load(:creator).find(params[:id])
   end
   def create
     create_params =
@@ -19,29 +26,42 @@ class CommentsController < ApplicationController
       end
 
     @comment = current_user.created_comments.build(create_params)
-    if @comment.save
-      flash[:notice] = "Sucessfully created Comment"
-    else
-      flash[:alert] = "Failed to create Comment"
-      head :bad_request
+    respond_to do |format|
+      if @comment.save
+        flash[:notice] = "Sucessfully created Comment"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to create Comment"
+        format.html { head :bad_request }
+      end
     end
   end
 
   def destroy
-    if @comment.destroy
-      flash[:notice] = "Sucessfully deleted comment!"
-    else
-      flash[:alert] = "Failed to delete comment!"
-      head :bad_request
+    @comment = current_user.created_comments.includes(:post, :comment, :creator).find(params[:id])
+    respond_to do |format|
+      if @comment.destroy
+        flash[:notice] = "Sucessfully deleted comment!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to delete comment!"
+        format.html { head :bad_request }
+      end
     end
   end
 
   def update
-    if @comment.update(comment_params)
-      flash[:notice] = "Sucessfully updated comment!"
-    else
-      flash[:alert] = "Failed to update comment!"
-      head :bad_request
+    respond_to do |format|
+      if @comment.update(comment_params)
+        flash[:notice] = "Sucessfully updated comment!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to update comment!"
+        format.html { head :bad_request }
+      end
     end
   end
 

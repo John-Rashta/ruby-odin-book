@@ -1,5 +1,5 @@
 <main>
-    <%= form_with model: @post, data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
+    <%= form_with model: Post.new, data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
         <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp"  %>
         <%= form.rich_textarea :content %>
         <%= form.submit "Post" %>

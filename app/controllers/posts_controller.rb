@@ -1,11 +1,10 @@
 class PostsController < ApplicationController
-  before_action :set_own_post, only: %i[ update destroy edit ]
+  before_action :set_own_post, only: %i[ update destroy edit part ]
   before_action :validate_params, only: %i[ update create ]
 
   # FEED
   def index
     @posts = Post.eager_load(:creator).order(created_at: :desc).where(creator_id: [ current_user.id ].concat(current_user.followings.ids))
-    @post = Post.new
   end
 
   def show
@@ -13,7 +12,6 @@ class PostsController < ApplicationController
   end
 
   def part
-    @post = current_user.created_posts.eager_load(:creator).find(params[:id])
   end
 
   def edit
@@ -47,18 +45,22 @@ class PostsController < ApplicationController
 
   def update
     ContentCreation.new.update_or_replace_content(@post, post_params)
-    if @post.save && @post.postable.save
-      flash[:notice] = "Sucessfully updated post!"
-    else
-      flash[:alert] = "Failed to update post!"
-      head :bad_request
+    respond_to do |format|
+      if @post.save && @post.postable.save
+        flash[:notice] = "Sucessfully updated post!"
+        format.turbo_stream
+        format.html { head :ok }
+      else
+        flash[:alert] = "Failed to update post!"
+        format.html { head :bad_request }
+      end
     end
   end
 
   private
 
   def set_own_post
-    @post = current_user.created_posts.find(params[:id])
+    @post = current_user.created_posts.includes(:creator).find(params[:id])
   end
 
   def post_params

@@ -1,2 +1,4 @@
 <%= render @user %>
-<%= render partial: "posts/post", collection: @user.created_posts %>
+<div id="posts-<%= @user.id %>">
+    <%= render partial: "posts/post", collection: @user.created_posts %>
+</div>

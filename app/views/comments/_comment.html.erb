@@ -1,13 +1,33 @@
-<div> <%= comment.creator.username %> </div>
-<div> <%= comment.content %> </div>
-<% if user_signed_in? %>
-    <div id="like-comment-<%= comment.id %>">
-        <%= form_with url:  comment_likes_path(comment.id), method: "#{comment.liked.any? ? "delete" : "post"}" do |form| %>
-                <%= form.button name: nil, "data-testid": "like-button-comment-#{comment.id}" do %>
-                    <%= icon "thumbs-up", fill: "#{comment.liked.any? ? "black" : "none"}" %>
-                <% end %>
+<div id="comment-<%= comment.id %>">
+    <%= turbo_frame_tag comment do %>
+        <% if user_signed_in? && current_user.id == comment.creator.id  %>
+            <%= button_to "X", comment_path(comment.id) , method: "delete" %>
+            <%= button_to "edit", edit_comment_path(comment.id), method: "get" %>
         <% end %>
-    </div>
-<% end %>
-<div id="like-comment-number-<%= comment.id %>"> <%= comment.likes_count %> </div>
-<div> <%= comment.comments_count %> </div>
+        <div> <%= comment.creator.username %> </div>
+        <div> <%= comment.content %> </div>
+        <% if user_signed_in? %>
+            <div id="like-comment-<%= comment.id %>">
+                <%= form_with url:  comment_likes_path(comment.id), method: "#{comment.liked.any? ? "delete" : "post"}" do |form| %>
+                        <%= form.button name: nil, "data-testid": "like-button-comment-#{comment.id}" do %>
+                            <%= icon "thumbs-up", fill: "#{comment.liked.any? ? "black" : "none"}" %>
+                        <% end %>
+                <% end %>
+            </div>
+        <% end %>
+        <% unless local_assigns[:no_response] %>
+            <div data-controller="visibility">
+                <button data-action="click->visibility#show">Respond</button>
+                <div data-visibility-target="formDiv" class="hidden">
+                    <%= form_with model: Comment.new, url: comment_comments_path(comment.id), data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
+                        <%= form.textarea :content, size: "5x5" %>
+                        <%= form.submit "Create" %>
+                        <%= button_tag "Cancel", type: :button, data: { action: "click->visibility#hide"} %>
+                    <% end %>
+                </div>
+            </div>
+        <%end %>
+        <div id="like-comment-number-<%= comment.id %>"> <%= comment.likes_count %> </div>
+        <div id="comments-comment-number-<%= comment.id %>"> <%= comment.comments_count %> </div>
+    <% end %>
+</div>
