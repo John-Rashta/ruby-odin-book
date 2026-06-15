@@ -6,4 +6,16 @@ class Request < ApplicationRecord
   validates :user_id, :sender_id, :table_type, presence: true
   validates :table_type, inclusion: { in: %w[follow] }
   validates :user_id, :sender_id, numericality: { only_integer: true }
+  after_create_commit :broadcast_to_receiver
+
+  private
+
+  def broadcast_to_receiver
+    broadcast_append_to(
+      "requests-#{self.user_id}",
+      target: "requests-#{self.user_id}",
+      partial: "requests/request",
+      locals: { request: self, current_user: self.user }
+    )
+  end
 end

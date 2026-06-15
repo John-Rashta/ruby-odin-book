@@ -7,6 +7,10 @@ class UsersController < ApplicationController
     @user = User.eager_load(created_posts: :creator).find(params[:id])
   end
 
+  def follow_request
+    @user = User.eager_load(:followed, :follow_request_by_current).find(params[:id])
+  end
+
   def change_avatar
     avatar_prep = helpers.create_avatar(user_params[:avatar])
     # use the alpha from the svg as the alpha for our image

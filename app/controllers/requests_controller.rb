@@ -7,6 +7,10 @@ class RequestsController < ApplicationController
   def sent_requests
     @sent_requests = current_user.sent_requests.includes(:user)
   end
+
+  def follow_request
+  end
+  # CHECK WHO CURRENT USER IS, IF SENDER OR RECEIVER AND BROADCAST ACCORDINGLY
   def destroy
     @request = Request.where(id: params[:id]).and(Request.where(user_id: current_user.id).or(Request.where(sender_id: current_user.id))).first
     respond_to do |format|
@@ -14,6 +18,11 @@ class RequestsController < ApplicationController
         flash.now[:notice] = "Sucessfully deleted request!"
         format.turbo_stream
         format.html { head :ok }
+        other_user = current_user.id == @request.user.id ? @request.sender : @request.user
+        RequestChannel.broadcast_to(
+          other_user,
+          id: current_user.id
+        )
       else
         flash[:alert] = "Failed to delete request!"
         format.html { head :bad_request }
@@ -33,6 +42,11 @@ class RequestsController < ApplicationController
           flash.now[:notice]= "Sucessfully sent request!"
           format.turbo_stream
           format.html { head :ok }
+          other_user = current_user.id == @request.user.id ? @request.sender : @request.user
+          RequestChannel.broadcast_to(
+            other_user,
+            id: current_user.id
+          )
         else
           flash[:alert] = "Failed to send request!"
           format.html { head :bad_request }

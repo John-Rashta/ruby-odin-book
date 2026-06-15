@@ -1,3 +1,4 @@
-<div id="requests">
+<%= turbo_stream_from "requests-#{current_user.id}" %>
+<div id="requests-<%= current_user.id %>">
     <%= render @requests%>
 </div>
