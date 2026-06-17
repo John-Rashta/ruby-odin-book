@@ -1,3 +1,4 @@
-<div id="followers">
+<%= turbo_stream_from "followers-#{current_user.id}" %>
+<div id="followers-<%= current_user.id %>">
     <%= render partial: "users/user", collection: @followers, locals: {custom_start: "followers-user-"} %>
 </div>

@@ -18,11 +18,10 @@ class RequestsController < ApplicationController
         flash.now[:notice] = "Sucessfully deleted request!"
         format.turbo_stream
         format.html { head :ok }
-        other_user = current_user.id == @request.user.id ? @request.sender : @request.user
-        RequestChannel.broadcast_to(
-          other_user,
-          id: current_user.id
-        )
+        RequestsBroadcastJob.perform_later(
+          current_user,
+          helpers.get_other_user_from_request(current_user, @request),
+          { action: "destroy", requestId: @request.id })
       else
         flash[:alert] = "Failed to delete request!"
         format.html { head :bad_request }
@@ -42,10 +41,9 @@ class RequestsController < ApplicationController
           flash.now[:notice]= "Sucessfully sent request!"
           format.turbo_stream
           format.html { head :ok }
-          other_user = current_user.id == @request.user.id ? @request.sender : @request.user
-          RequestChannel.broadcast_to(
-            other_user,
-            id: current_user.id
+          RequestsBroadcastJob.perform_later(
+            current_user,
+            helpers.get_other_user_from_request(current_user, @request),
           )
         else
           flash[:alert] = "Failed to send request!"

@@ -25,10 +25,15 @@ class FollowshipsController < ApplicationController
 
     @followship = current_user.followships.includes(:sender).build(follower_id: @request.sender.id)
     respond_to do |format|
-      if @followship.save && @request.destroy
+      if @request.destroy && @followship.save
         flash.now[:notice] = "Accepted Follow!"
         format.turbo_stream
         format.html { head :ok }
+        RequestsBroadcastJob.perform_later(
+          current_user,
+          helpers.get_other_user_from_request(current_user, @request),
+          { action: "destroy", requestId: @request.id }
+        )
       else
         @followship.destroy
         flash[:alert] = "Failed to accept follow!"

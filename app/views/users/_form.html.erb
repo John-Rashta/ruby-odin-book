@@ -5,7 +5,7 @@
         <% elsif user.follow_request_by_current.any? %>
             <%= button_to "Cancel Request", request_path(user.follow_request_by_current[0].id) , method: "delete" %>
         <% else %>
-            <%if user_signed_in? && user.id != current_user.id %>
+            <%if current_user && user.id != current_user.id %>
                 <%= button_to "Follow", requests_path , method: "post", params: {request: { user_id: user.id, table_type: "follow"}}  %>
             <% end %>
         <% end %>

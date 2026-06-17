@@ -10,14 +10,25 @@ consumer.subscriptions.create("RequestChannel", {
   },
 
   received(data) {
-    console.log("hello")
     // Called when there's incoming data on the websocket for this channel
-    this.addSrc(data["id"])
+    this.addSrc(data["id"]);
+    this.removeRequest(data["action"], data["requestId"]);
+  },
+
+  removeRequest(action, requestId) {
+    if (action === "destroy" && requestId) {
+      const element = document.getElementById(`request-${requestId}`);
+      if (element) {
+        element.remove();
+      };
+    };
   },
 
   addSrc(id) {
     const frame = document.getElementById(`user-follow-form-${id}`);
-    frame.src = this.createUrl(id);
+    if (frame) {
+      frame.src = this.createUrl(id);
+    };
   },
 
   createUrl(id) {

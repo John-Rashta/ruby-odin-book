@@ -1,5 +1,5 @@
 <div id="<%= local_assigns[:custom_start] ? local_assigns[:custom_start] : "user-" %><%= user.id %>">
     <img src="<%= user.avatar_url %>" alt="">
     <div> <%= user.username %> </div>
-    <%= render partial: "form", locals: { user: user } %>
+    <%= render partial: "users/form", locals: { user: user, current_user: current_user } %>
 </div>
