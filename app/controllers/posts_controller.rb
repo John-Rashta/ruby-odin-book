@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
   before_action :set_own_post, only: %i[ update destroy edit part ]
   before_action :validate_params, only: %i[ update create ]
+  protect_from_forgery with: :exception
 
   # FEED
   def index
@@ -23,6 +24,7 @@ class PostsController < ApplicationController
         flash[:notice] = "Sucessfully created post!"
         format.turbo_stream
         format.html { head :ok }
+        PostCreationJob.perform_later(@post)
       else
         flash[:alert] = "Failed to create post!"
         format.html { head :bad_request }
@@ -44,12 +46,14 @@ class PostsController < ApplicationController
   end
 
   def update
+    # BROADCAST UPDATE HERE AND SEND TO A JOB
     ContentCreation.new.update_or_replace_content(@post, post_params)
     respond_to do |format|
       if @post.save && @post.postable.save
         flash[:notice] = "Sucessfully updated post!"
         format.turbo_stream
         format.html { head :ok }
+        PostUpdateJob.perform_later(@post.id, "content", @post)
       else
         flash[:alert] = "Failed to update post!"
         format.html { head :bad_request }

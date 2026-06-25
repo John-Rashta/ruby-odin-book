@@ -1,4 +1,5 @@
 class FollowshipsController < ApplicationController
+  protect_from_forgery with: :exception
   def index
     @follows = current_user.followings.eager_load(:followed, :follow_request_by_current)
   end

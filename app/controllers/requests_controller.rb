@@ -1,5 +1,6 @@
 class RequestsController < ApplicationController
   # DO BUTTONS TO CANCEL SENT AND REFUSE RECEIVED
+  protect_from_forgery with: :exception
   def index
     @requests = current_user.requests.includes(:sender)
   end

@@ -8,4 +8,33 @@ class Comment < ApplicationRecord
   has_many :comments, dependent: :destroy
   validates :creator_id, numericality: { only_integer: true }
   validates :content, presence: true
+  # after_create_commit :add_comment
+  after_update_commit :update_comment
+  after_destroy_commit :delete_comment
+
+  private
+
+  def add_comment
+    if self.comment_id
+      broadcast_prepend_to(
+      "comment-show-comments-#{self.comment_id}",
+      partial: "comments/comment",
+      target: "comment-show-comments-#{self.comment_id}",
+
+      )
+      broadcast_append_to(
+      "comment-comments-#{self.comment_id}"
+      )
+    else
+      broadcast_append_to(
+      "post-comments-#{self.post_id}"
+    )
+    end
+  end
+
+  def update_comment
+  end
+
+  def delete_comment
+  end
 end

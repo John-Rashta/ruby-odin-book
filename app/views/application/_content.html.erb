@@ -1,0 +1,5 @@
+<% if content.postable_type == "PostImage" %>
+    <%= image_tag content.postable.image %>
+<% else %>
+    <%= content.postable&.content  %>
+<% end %>

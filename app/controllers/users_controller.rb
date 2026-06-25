@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  protect_from_forgery with: :exception
   before_action :validate_image, only: %i[ change_avatar ]
   def index
     @users = User.eager_load(:followed, :follow_request_by_current).where.not(id: current_user.id).all

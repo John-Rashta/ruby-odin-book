@@ -16,6 +16,9 @@ class ContentCreation
       post
     elsif params.has_key?(:content) && post.postable_type == "PostContent"
       post.postable.content = params[:content]
+      # Fixes an IO Error when trying to replace an image with another (First image has to be deleted first before inserting second one, if the delete happens after
+      # than it won't cause an error) - still trying to figure out why exactly
+      post.postable.content.body.to_s
       post
     else
       nil

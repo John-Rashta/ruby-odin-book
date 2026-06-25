@@ -1,2 +1,4 @@
 <%= turbo_stream.prepend "posts", @post %>
 <%= turbo_stream.prepend "posts-#{current_user.id}", @post %>
+<%= turbo_stream.prepend "my-posts-#{current_user.id}", @post %>
+<%= turbo_stream.prepend "feed-#{current_user.id}", @post %>

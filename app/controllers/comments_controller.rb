@@ -5,6 +5,7 @@ class CommentsController < ApplicationController
   # PROBABLY CHANGE NAMES CAUSE COMMENTS/ID/COMMENTS LOOKS BAD
   # CHECK IF COMMENT ID IS PRESENT AND GRAB THAT AND ITS ID AND POSTID OTHERWISE BUILD DIRECT COMMENT TO POST ID
   before_action :set_own_comment, only: %i[ update edit ]
+  protect_from_forgery with: :exception
 
   def show
     @comment = Comment.eager_load(:creator, comments: :creator).order("comments_comments.created_at": :desc).find(params[:id])
@@ -31,6 +32,7 @@ class CommentsController < ApplicationController
         flash[:notice] = "Sucessfully created Comment"
         format.turbo_stream
         format.html { head :ok }
+        PostUpdateJob.perform_later(@comment.post_id, "comments_count", @comment.post.comments_count)
       else
         flash[:alert] = "Failed to create Comment"
         format.html { head :bad_request }
@@ -45,6 +47,7 @@ class CommentsController < ApplicationController
         flash[:notice] = "Sucessfully deleted comment!"
         format.turbo_stream
         format.html { head :ok }
+        PostUpdateJob.perform_later(@comment.post_id, "comments_count", @comment.post.comments_count)
       else
         flash[:alert] = "Failed to delete comment!"
         format.html { head :bad_request }

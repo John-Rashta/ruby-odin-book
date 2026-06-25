@@ -1,4 +1,5 @@
 class LikesController < ApplicationController
+  protect_from_forgery with: :exception
   def create
     @like = current_user.likes.includes(:contentable).build(get_search_columns)
     respond_to do  |format|

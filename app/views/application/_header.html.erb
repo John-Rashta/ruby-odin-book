@@ -1,6 +1,6 @@
 <header class="flex justify-between w-full p-5 font-bold">
     <nav class="flex items-center justify-between grow-1">
-        <div>  Home </div>
+        <%= button_to "Home", posts_path, method: "get", class: "button border-solid border-transparent hover:border-blue-300 border-3 p-2" %>
         <div class="flex gap-5 content-center">
             <% if user_signed_in? %>
                 <%= button_to "Log Out", destroy_user_session_path, method: "delete", class: "button border-solid border-transparent hover:border-blue-300 border-3 p-2" %>
