@@ -32,7 +32,11 @@ class CommentsController < ApplicationController
         flash[:notice] = "Sucessfully created Comment"
         format.turbo_stream
         format.html { head :ok }
+        CommentCreationJob.perform_later(@comment)
         PostUpdateJob.perform_later(@comment.post_id, "comments_count", @comment.post.comments_count)
+        if @comment.comment
+          CommentUpdateJob.perform_later(@comment.comment_id, "comments_count", @comment.comment.comments_count)
+        end
       else
         flash[:alert] = "Failed to create Comment"
         format.html { head :bad_request }
@@ -48,6 +52,9 @@ class CommentsController < ApplicationController
         format.turbo_stream
         format.html { head :ok }
         PostUpdateJob.perform_later(@comment.post_id, "comments_count", @comment.post.comments_count)
+        if @comment.comment
+          CommentUpdateJob.perform_later(@comment.comment_id, "comments_count", @comment.comment.comments_count)
+        end
       else
         flash[:alert] = "Failed to delete comment!"
         format.html { head :bad_request }
@@ -61,6 +68,7 @@ class CommentsController < ApplicationController
         flash[:notice] = "Sucessfully updated comment!"
         format.turbo_stream
         format.html { head :ok }
+        CommentUpdateJob.perform_later(@comment.id, "content", @comment.content)
       else
         flash[:alert] = "Failed to update comment!"
         format.html { head :bad_request }

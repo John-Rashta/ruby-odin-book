@@ -7,6 +7,11 @@ class LikesController < ApplicationController
         flash.now[:notice] = "Sucessfully Liked!"
         format.turbo_stream
         format.html { head :ok }
+        if @like.contentable_type == "Post"
+          PostUpdateJob.perform_later(@like.contentable_id, "likes_count", @like.contentable.likes_count)
+        else
+          CommentUpdateJob.perform_later(@like.contentable_id, "likes_count", @like.contentable.likes_count)
+        end
       else
         flash[:alert] = "Failed to Like!"
         format.html { head :bad_request }
@@ -21,6 +26,11 @@ class LikesController < ApplicationController
         flash.now[:notice] = "Sucessfully Removed Like!"
         format.turbo_stream
         format.html { head :ok }
+        if @like.contentable_type == "Post"
+          PostUpdateJob.perform_later(@like.contentable_id, "likes_count", @like.contentable.likes_count)
+        else
+          CommentUpdateJob.perform_later(@like.contentable_id, "likes_count", @like.contentable.likes_count)
+        end
       else
         flash[:alert] = "Failed to Destroy!"
         format.html { head :bad_request }

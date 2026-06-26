@@ -1,9 +1,17 @@
 <div id="post-<%= post.id %>">
     <%= turbo_stream_from "post-#{post.id}" %>
     <%= turbo_frame_tag post do %>
-        <% if !local_assigns[:just_created] && current_user && current_user.id == post.creator.id  %>
+        <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
+        <div class="<%= local_assigns[:just_created] ? "hidden" : "" %>" <%= tag.attributes(
+            data: ({
+                controller: "options",
+                "options-creatorid-value" => post.creator.id
+            } if local_assigns[:just_created]
+            )
+        )%>>
             <%= button_to "X", post_path(post.id) , method: "delete" %>
             <%= button_to "edit", edit_post_path(post.id), method: "get" %>
+        </div>
         <% end %>
         <div> <%= post.creator.username %> </div>
         <div id="post-content-<%= post.id %>" >
@@ -22,7 +30,7 @@
                 <% end %>
             </div>
         <% end %>
-        <div id="like-post-number-<%= post.id %>"> <%= post.likes_count %> </div>
+        <div id="likes-post-number-<%= post.id %>"> <%= post.likes_count %> </div>
         <div id="comments-post-number-<%= post.id %>"> <%= post.comments_count %> </div>
     <% end %>
 </div>

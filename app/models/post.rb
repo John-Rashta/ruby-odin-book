@@ -1,4 +1,5 @@
 class Post < ApplicationRecord
+  include Rails.application.routes.url_helpers
   belongs_to :creator, class_name: "User"
   has_many :likes, as: :contentable, dependent: :destroy
   has_many :like_users, through: :likes, source: :user

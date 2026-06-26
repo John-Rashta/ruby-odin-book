@@ -1,5 +1,5 @@
-<%= turbo_stream_from "#{current_user.id == @user.id ? "my-posts-#{@user.id}" : "posts-#{@user.id}"}" %>
+<%= turbo_stream_from "posts-#{@user.id}" %>
 <%= render @user %>
-<div id="<%= current_user.id == @user.id ? "my-posts-#{@user.id}" : "posts-#{@user.id}" %>">
+<div id="posts-<%= @user.id %>">
     <%= render partial: "posts/post", collection: @user.created_posts %>
 </div>

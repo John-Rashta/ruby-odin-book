@@ -8,9 +8,6 @@ class RequestsController < ApplicationController
   def sent_requests
     @sent_requests = current_user.sent_requests.includes(:user)
   end
-
-  def follow_request
-  end
   # CHECK WHO CURRENT USER IS, IF SENDER OR RECEIVER AND BROADCAST ACCORDINGLY
   def destroy
     @request = Request.where(id: params[:id]).and(Request.where(user_id: current_user.id).or(Request.where(sender_id: current_user.id))).first

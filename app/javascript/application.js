@@ -11,18 +11,19 @@ import { Turbo } from "@hotwired/turbo-rails"
 // CHANGE THIS TO WORK ON COMMENTS ASWELL- SHOULD BE ABLE TO TELL THE DIFFERENCE OR MORE INFO NEEDS TO BE PROVIDED
 // JUST SEND IF STRING "post" OR "comment" AND USE THAT TO GET EVERYTHING- CHANGE POST_ID TO JUST ID- DONT HARD CODE POST OR COMMENT- JUST INSERT THE FETCHED STRING
 Turbo.StreamActions.update_count = function() {
-    const post_id = this.getAttribute("post_id");
-    const element = document.getElementById(`post-${post_id}`);
+    const type = this.getAttribute("type");
+    const id = this.getAttribute("id");
+    const element = document.getElementById(`${type}-${id}`);
     if (!element) {
         return;
     };
-    const like_count = this.getAttribute("like_count");
+    const like_count = this.getAttribute("likes_count");
     const comments_count = this.getAttribute("comments_count");
     if (like_count) {
-        const likes_count_div = document.getElementById(`like-post-number-${post_id}`);
+        const likes_count_div = document.getElementById(`likes-${type}-number-${id}`);
         likes_count_div.textContent = like_count;
     }else if (comments_count) {
-        const comments_count_div = document.getElementById(`comments-post-number-${post_id}`);
+        const comments_count_div = document.getElementById(`comments-${type}-number-${id}`);
         comments_count_div.textContent = comments_count;
     };
 }

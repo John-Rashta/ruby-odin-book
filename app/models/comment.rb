@@ -1,4 +1,5 @@
 class Comment < ApplicationRecord
+  include Rails.application.routes.url_helpers
   belongs_to :creator, class_name: "User"
   belongs_to :post, counter_cache: true
   belongs_to :comment, optional: true, counter_cache: true
@@ -9,11 +10,11 @@ class Comment < ApplicationRecord
   validates :creator_id, numericality: { only_integer: true }
   validates :content, presence: true
   # after_create_commit :add_comment
-  after_update_commit :update_comment
   after_destroy_commit :delete_comment
 
   private
 
+  # NEEDS TO BE FIXED AND PROBABLY MOVED
   def add_comment
     if self.comment_id
       broadcast_prepend_to(
@@ -32,9 +33,10 @@ class Comment < ApplicationRecord
     end
   end
 
-  def update_comment
-  end
-
   def delete_comment
+    broadcast_remove_to(
+      "comment-#{self.id}",
+      target: "comment-#{self.id}"
+    )
   end
 end

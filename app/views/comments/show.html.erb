@@ -1,3 +1,4 @@
+<%= turbo_stream_from "comment-show-#{@comment.id}" %>
 <%= render @comment, {no_response: true}  %>
 <%= form_with model: Comment.new, url: comment_comments_path(@comment.id), data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
     <%= form.textarea :content, size: "5x5" %>
