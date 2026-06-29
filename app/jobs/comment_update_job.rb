@@ -14,6 +14,7 @@ class CommentUpdateJob < ApplicationJob
       Turbo::StreamsChannel.broadcast_action_to(
         "comment-#{comment_id}",
         action: "update_count",
+        html: "",
         attributes: {
           id: comment_id,
           data_type => data,

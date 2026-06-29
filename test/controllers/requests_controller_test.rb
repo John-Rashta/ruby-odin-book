@@ -61,7 +61,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
   test "Sucessfully delete received request" do
     sign_in users(:three)
     assert_difference("Request.count", -1) do
-      delete request_url(requests(:one).id)
+      delete request_url(requests(:one).id), params: { request: { user_id: requests(:one).sender_id } }
     end
     assert_response :success
   end
@@ -69,7 +69,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
   test "Sucessfully delete sent request" do
     sign_in users(:four)
     assert_difference("Request.count", -1) do
-      delete request_url(requests(:one).id)
+      delete request_url(requests(:one).id), params: { request: { user_id: requests(:one).user_id } }
     end
     assert_response :success
   end
@@ -77,7 +77,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
   test "Invalid Id for Delete" do
     sign_in users(:three)
     assert_difference("Request.count", 0) do
-      delete request_url("dsaf")
+      delete request_url("dsaf"), params: { request: { user_id: 00000 } }
     end
 
     assert_equal "Failed to delete request!", flash[:alert]
@@ -87,7 +87,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
   test "Non-existent Id for Delete" do
     sign_in users(:three)
     assert_difference("Request.count", 0) do
-      delete request_url(551233)
+      delete request_url(551233), params: { request: { user_id: 00000 } }
     end
 
     assert_equal "Failed to delete request!", flash[:alert]
@@ -97,7 +97,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
    test "Can't delete other people's requests" do
     sign_in users(:one)
     assert_difference("Request.count", 0) do
-      delete request_url(requests(:one).id)
+      delete request_url(requests(:one).id), params: { request: { user_id: requests(:one).user_id } }
     end
 
     assert_equal "Failed to delete request!", flash[:alert]
@@ -116,7 +116,7 @@ class RequestsControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:four)
     get requests_sent_url
     assert_dom "div", "follow"
-    assert_dom "div", "Jenny"
+    assert_dom "div", "David"
     assert_dom "button", "Cancel Request"
   end
 end

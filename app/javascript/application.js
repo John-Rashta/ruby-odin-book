@@ -26,4 +26,8 @@ Turbo.StreamActions.update_count = function() {
         const comments_count_div = document.getElementById(`comments-${type}-number-${id}`);
         comments_count_div.textContent = comments_count;
     };
-}
+};
+
+Turbo.StreamActions.redirect_to_home = function() {
+    Turbo.visit("/");
+};

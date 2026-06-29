@@ -15,6 +15,7 @@ class PostUpdateJob < ApplicationJob
       Turbo::StreamsChannel.broadcast_action_to(
         "post-#{post_id}",
         action: "update_count",
+        html: "",
         attributes: {
           id: post_id,
           data_type => data,

@@ -10,6 +10,7 @@ class RequestsController < ApplicationController
   end
   # CHECK WHO CURRENT USER IS, IF SENDER OR RECEIVER AND BROADCAST ACCORDINGLY
   def destroy
+    this_params = destroy_params
     @request = Request.where(id: params[:id]).and(Request.where(user_id: current_user.id).or(Request.where(sender_id: current_user.id))).first
     respond_to do |format|
       if @request && @request.destroy
@@ -28,13 +29,13 @@ class RequestsController < ApplicationController
   end
 
   def create
-    params = create_params
+    this_params = create_params
     respond_to do |format|
-      if params[:user_id].to_i == current_user.id
+      if this_params[:user_id].to_i == current_user.id
         flash[:alert] = "Can't send request to yourself!"
         format.html { head :bad_request }
       else
-        @request = current_user.sent_requests.build(params)
+        @request = current_user.sent_requests.build(create_params)
         if @request.save
           flash.now[:notice]= "Sucessfully sent request!"
           format.turbo_stream
@@ -54,5 +55,9 @@ class RequestsController < ApplicationController
   private
   def create_params
     params.expect(request: [ :user_id, :table_type ])
+  end
+
+  def destroy_params
+    params.expect(request: [ :user_id ])
   end
 end

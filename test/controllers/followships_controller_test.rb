@@ -17,14 +17,14 @@ class FollowshipsControllerTest < ActionDispatch::IntegrationTest
 
   test "Successfull Follow Accept" do
     sign_in users(:three)
-    post followships_url, params: { request: { id: requests(:one).id } }
+    post followships_url, params: { request: { id: requests(:one).id, user_id: requests(:one).sender_id } }
     assert_response :success
   end
   # MAYBE ASSERT THAT DESTROY AND FOLLOWSHIP CREATION HAPPENS LIKE +1 AND -1
   test "Deletes Request on Follow Accept" do
     sign_in users(:three)
     assert_difference("Request.count", -1) do
-      post followships_url, params: { request: { id: requests(:one).id } }
+      post followships_url, params: { request: { id: requests(:one).id, user_id: requests(:one).sender_id } }
     end
     assert_response :success
   end
@@ -32,16 +32,16 @@ class FollowshipsControllerTest < ActionDispatch::IntegrationTest
   test "Creates Followship on Follow Accept" do
     sign_in users(:three)
     assert_difference("Followship.count", 1) do
-      post followships_url, params: { request: { id: requests(:one).id } }
+      post followships_url, params: { request: { id: requests(:one).id, user_id: requests(:one).sender_id  } }
     end
     assert_response :success
   end
 
   test "Can't accept non-existent request" do
     sign_in users(:three)
-    post followships_url, params: { request: { id: "dffg" } }
-    assert_equal "Record not found.", flash[:alert]
-    assert_response :not_found
+    post followships_url, params: { request: { id: "dffg", user_id: 00000  } }
+    assert_equal "Failed to accept follow!", flash[:alert]
+    assert_response :bad_request
   end
 
   # TODO TEST DESTROY

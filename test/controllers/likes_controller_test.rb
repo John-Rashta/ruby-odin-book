@@ -41,7 +41,7 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Like.count", 0) do
       delete post_likes_url(posts(:two).id)
     end
-    assert_response :not_found
+    assert_response :bad_request
   end
 
   # COMMENT
@@ -83,6 +83,6 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Like.count", 0) do
       delete comment_likes_url(comments(:one).id)
     end
-    assert_response :not_found
+    assert_response :bad_request
   end
 end

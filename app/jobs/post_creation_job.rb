@@ -17,6 +17,12 @@ class PostCreationJob < ApplicationJob
       html: post_html,
     )
 
+    Turbo::StreamsChannel.broadcast_prepend_to(
+      "feed-#{post.creator_id}",
+      target: "feed-#{post.creator_id}",
+      html: post_html,
+    )
+
     followers_ids.each_slice(1000) do |batch|
       PostCreationBatchJob.perform_later(batch, post_html)
     end

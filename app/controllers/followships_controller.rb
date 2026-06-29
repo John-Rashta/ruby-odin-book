@@ -8,7 +8,8 @@ class FollowshipsController < ApplicationController
     @followers = current_user.followers.eager_load(:followed, :follow_request_by_current)
   end
   def destroy
-    @followship = current_user.inverse_followships.find_by!(destroy_params)
+    this_params = destroy_params
+    @followship = current_user.inverse_followships.find_by!(user_id: this_params[:user_id])
     respond_to do |format|
       if @followship.destroy
         flash.now[:notice] = "Sucessfull Unfollow!"
@@ -22,11 +23,12 @@ class FollowshipsController < ApplicationController
   end
 
   def create
-    @request = current_user.requests.includes(:sender).find(create_params[:id])
+    this_params = create_params
+    @request = current_user.requests.includes(:sender).find_by(id: this_params[:id])
 
-    @followship = current_user.followships.includes(:sender).build(follower_id: @request.sender.id)
+    @followship = current_user.followships.includes(:sender).build(follower_id: @request&.sender_id)
     respond_to do |format|
-      if @request.destroy && @followship.save
+      if @request && @request.destroy && @followship.save
         flash.now[:notice] = "Accepted Follow!"
         format.turbo_stream
         format.html { head :ok }
@@ -50,6 +52,6 @@ class FollowshipsController < ApplicationController
   end
 
   def create_params
-    params.expect(request: [ :id ])
+    params.expect(request: [ :id, :user_id ])
   end
 end

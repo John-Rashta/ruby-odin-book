@@ -38,5 +38,11 @@ class Comment < ApplicationRecord
       "comment-#{self.id}",
       target: "comment-#{self.id}"
     )
+
+    broadcast_action_to(
+      "comment-show-#{self.id}",
+      action: "redirect_to_home",
+      html: ""
+    )
   end
 end

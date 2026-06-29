@@ -19,17 +19,18 @@ class Post < ApplicationRecord
   end
 
   def update_post
-    # SHOULD BE MOVED TO A JOB AND BROADCAST FROM CONTROLLER SHOULD DO LIKES AND COMMENTS COUNTS ASWELL THROUGH THIS CHANNEL IN CONTROLLERS- JUST DO IT FROM CONTROLLERS
-    # DELEGATED TO JOBS- MAYBE JUST DO +1 OR -1 INSTEAD SO WE DONT HAVE TO FETCH POST FOR EVERY LIKE AND COMMENT CREATION
-    # CAN CHECK IN THE JOB WHICH TYPE WE SENDING LIKES COUNT COMMS COUNT OR CONTENT AND ACT ACCORDINGLY- REMEMBER TO FINISH JAVASCRIPT PART- CHECK IF VALUES ARE PRESENT
-    # AND THAN UPDATE ACORDINGLY
-    # CHECK IF STREAM GETS REMOVED WHEN PARTIAL DELETED
   end
 
   def delete_post
     broadcast_remove_to(
       "post-#{self.id}",
       target: "post-#{self.id}"
+    )
+
+    broadcast_action_to(
+      "post-show-#{self.id}",
+      action: "redirect_to_home",
+      html: ""
     )
   end
 end

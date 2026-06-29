@@ -1,0 +1,5 @@
+<%= form_with url:  self.public_send("#{local_assigns[:type]}_likes_path", content.id), method: "#{!local_assigns[:just_created] && content.liked.any? ? "delete" : "post"}" do |form| %>
+        <%= form.button name: nil, "data-testid": "like-button-#{local_assigns[:type]}-#{content.id}" do %>
+            <%= icon "thumbs-up", fill: "#{!local_assigns[:just_created] && content.liked.any? ? "black" : "none"}" %>
+        <% end %>
+<% end %>
