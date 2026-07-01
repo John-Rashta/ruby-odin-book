@@ -1,0 +1,4 @@
+<%= turbo_stream.remove "follows-user-#{user.id}" %>
+<%= turbo_stream.replace "user-follow-form-#{user.id}" do %>
+    <%= render partial: "users/form", locals: {current_user: current_user, user: user }  %>
+<% end %>

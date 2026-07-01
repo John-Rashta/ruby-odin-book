@@ -24,6 +24,11 @@ class RequestsController < ApplicationController
       else
         flash[:alert] = "Failed to delete request!"
         format.html { head :bad_request }
+        if other_user = User.find_by(id: this_params[:user_id])
+          format.turbo_stream {
+            render :request_failure, locals: { current_user: current_user, user: other_user, request_id: params[:id] }, status: :unprocessable_entity
+          }
+        end
       end
     end
   end
@@ -35,8 +40,8 @@ class RequestsController < ApplicationController
         flash[:alert] = "Can't send request to yourself!"
         format.html { head :bad_request }
       else
-        @request = current_user.sent_requests.build(create_params)
-        if @request.save
+        @request = current_user.sent_requests.create_or_find_by(create_params)
+        if @request.previously_new_record?
           flash.now[:notice]= "Sucessfully sent request!"
           format.turbo_stream
           format.html { head :ok }
@@ -47,6 +52,12 @@ class RequestsController < ApplicationController
         else
           flash[:alert] = "Failed to send request!"
           format.html { head :bad_request }
+          # USE CREATE_OR_FIND_BY AND IF NOTHING FOUND JUST DELETE ASWELL- THO MAYBE ALWAYS DELETE- WILL SEE
+          if other_user = User.find_by(id: this_params[:user_id])
+            format.turbo_stream {
+              render turbo_stream: turbo_stream.replace("user-follow-form-#{other_user.id}", partial: "users/form", locals: { current_user: current_user, user: other_user }), status: :unprocessable_entity
+            }
+          end
         end
       end
     end

@@ -58,8 +58,8 @@ class FollowshipsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Followship.count", 0) do
       delete followships_url, params: { follow: { user_id: 235 } }
     end
-    assert_equal "Record not found.", flash[:alert]
-    assert_response :not_found
+    assert_equal "Failed to unfollow!", flash[:alert]
+    assert_response :bad_request
   end
 
   # VIEWS

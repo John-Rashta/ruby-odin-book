@@ -9,15 +9,21 @@ class FollowshipsController < ApplicationController
   end
   def destroy
     this_params = destroy_params
-    @followship = current_user.inverse_followships.find_by!(user_id: this_params[:user_id])
+    @followship = current_user.inverse_followships.find_by(user_id: this_params[:user_id])
     respond_to do |format|
-      if @followship.destroy
+      if @followship && @followship.destroy
         flash.now[:notice] = "Sucessfull Unfollow!"
         format.turbo_stream
         format.html { head :ok }
       else
         flash[:alert] = "Failed to unfollow!"
         format.html { head :bad_request }
+        # REMOVE USER FROM FOLLOWSHIPS PAGE IF FAILED TO UNFOLLOW AND UPDATE FORM
+        if other_user = User.find_by(id: this_params[:user_id])
+          format.turbo_stream {
+            render :followship_failure, locals: { current_user: current_user, user: other_user }, status: :unprocessable_entity
+          }
+        end
       end
     end
   end
@@ -26,9 +32,9 @@ class FollowshipsController < ApplicationController
     this_params = create_params
     @request = current_user.requests.includes(:sender).find_by(id: this_params[:id])
 
-    @followship = current_user.followships.includes(:sender).build(follower_id: @request&.sender_id)
+    @followship = current_user.followships.includes(:sender).create_or_find_by(follower_id: @request&.sender_id)
     respond_to do |format|
-      if @request && @request.destroy && @followship.save
+      if @request && @request.destroy && @followship.previously_new_record?
         flash.now[:notice] = "Accepted Follow!"
         format.turbo_stream
         format.html { head :ok }
@@ -41,6 +47,8 @@ class FollowshipsController < ApplicationController
         @followship.destroy
         flash[:alert] = "Failed to accept follow!"
         format.html { head :bad_request }
+        # IF FAILED DELETE THE REQUEST FROM REQUESTS PAGE IF IT EXISTS
+        format.turbo_stream { render turbo_stream: turbo_stream.remove("request-#{this_params[:id]}"), status: :unprocessable_entity }
       end
     end
   end
