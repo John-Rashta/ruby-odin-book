@@ -1,15 +1,28 @@
 class PostsController < ApplicationController
+  include Pagy::Method
   before_action :set_own_post, only: %i[ update destroy edit part ]
   before_action :validate_params, only: %i[ update create ]
   protect_from_forgery with: :exception
 
   # FEED
   def index
-    @posts = Post.eager_load(:creator).order(created_at: :desc).where(creator_id: [ current_user.id ].concat(current_user.followings.ids))
+    @pagy, @posts = pagy(:countless, Post.eager_load(:creator).order(created_at: :desc).where(creator_id: [ current_user.id ].concat(current_user.followings.ids)), limit: 15)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def show
     @post = Post.eager_load(:creator, direct_comments: :creator).find(params[:id])
+
+    @pagy, @direct_comments = pagy(:countless, @post.direct_comments, limit: 15)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def part

@@ -81,3 +81,5 @@ gem "cloudinary"
 gem "ruby-vips"
 
 gem "tailwindcss-rails", "~> 4.4"
+
+gem "pagy", "~> 43.5"

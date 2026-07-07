@@ -8,7 +8,8 @@
                 html: { 
                   method: :put,
                   class: "bg-white mb-4 px-8 pt-6 pb-8 rounded shadow-md"
-                }) do |f| %>
+                },
+                data: { turbo: false }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
 
     <div class="field">

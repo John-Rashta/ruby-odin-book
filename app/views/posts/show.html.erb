@@ -5,5 +5,5 @@
     <%= form.submit "Create" %>
 <% end %>
 <div id="post-comments-<%= @post.id %>">
-    <%= render partial: "comments/comment", collection: @post.direct_comments %>
+    <%= render partial: "comments/comment", collection: @direct_comments %>
 </div>

@@ -1,0 +1,9 @@
+<%= turbo_stream.append "comment-show-comments-#{@comment.id}" do %>
+  <%= render partial: "comment", collection: @comments %>
+<% end %>
+
+<% if @pagy.next.present? %>
+  <%= turbo_stream.replace :next_page do %>
+    <%= turbo_frame_tag :next_page, src: comment_path(@comment.id, page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+  <% end %>
+<% end %>

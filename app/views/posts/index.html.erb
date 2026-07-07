@@ -8,4 +8,7 @@
     <div id="feed-<%= current_user.id %>">
         <%= render @posts%>
     </div>
+    <% if @pagy.next.present? %>
+        <%= turbo_frame_tag :next_page, src: posts_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+    <% end %>
 </main>

@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+  include Pagy::Method
   # MAYBE ALREADY INTRODUCE NOT HAVING POST AND CHECKING IF COMMENT ID IS PASSED? NOT SURE
   # USE NESTING INSTEAD- EITHER DOUBLE NESTING ON SINGLE- COMMENTS NESTED IN POSTS IN COMMENTS OR SEPARATE-
   # COMMENTS NESTED IN POSTS AND ALSO COMMENTS NESTED IN COMMENTS- DO IT SEPARATE- USE NAMESPACES OR SOMETHING
@@ -9,6 +10,11 @@ class CommentsController < ApplicationController
 
   def show
     @comment = Comment.eager_load(:creator, comments: :creator).order("comments_comments.created_at": :desc).find(params[:id])
+    @pagy, @comments = pagy(:countless, @comment.comments, limit: 15)
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def edit
