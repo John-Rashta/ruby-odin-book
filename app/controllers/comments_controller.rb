@@ -23,6 +23,16 @@ class CommentsController < ApplicationController
   def part
     @comment = current_user.created_comments.eager_load(:creator).find(params[:id])
   end
+
+  # METHOD JUST FOR FETCHING COMMENTS FOR COMMENTS BELLOW COMMENTS
+  def comments_part
+    @first = part_params
+    @comment = Comment.eager_load(:creator, comments: :creator).find(params[:id])
+    @pagy, @comments = pagy(:countless, @comment.comments, limit: 10)
+    respond_to do |format|
+      format.turbo_stream
+    end
+  end
   def create
     create_params =
       if params.include?(:post_id)
@@ -31,6 +41,8 @@ class CommentsController < ApplicationController
         parent = Comment.find(params[:comment_id])
         { post_id: parent[:post_id], comment_id: parent[:id], **comment_params }
       end
+
+    @query_params = params.include?(:first_comment) && params[:first_comment] == "true" ? "true" : nil
 
     @comment = current_user.created_comments.build(create_params)
     respond_to do |format|
@@ -86,6 +98,10 @@ class CommentsController < ApplicationController
 
   def set_own_comment
     @comment = current_user.created_comments.find(params[:id])
+  end
+
+  def part_params
+    params.expect(:first)
   end
 
   def comment_params

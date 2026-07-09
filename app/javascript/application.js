@@ -31,3 +31,13 @@ Turbo.StreamActions.update_count = function() {
 Turbo.StreamActions.redirect_to_home = function() {
     Turbo.visit("/");
 };
+
+Turbo.StreamActions.add_class = function() {
+  const className = this.getAttribute("class")
+  this.targetElements.forEach(element => element.classList.add(className))
+};
+
+Turbo.StreamActions.remove_class = function() {
+  const className = this.getAttribute("class")
+  this.targetElements.forEach(element => element.classList.remove(className))
+};

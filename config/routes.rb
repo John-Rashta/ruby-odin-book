@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   put "/users/avatar", to: "users#change_avatar"
   get "/post/:id/part", to: "posts#part", as: :post_part
   get "/comment/:id/part", to: "comments#part", as: :comment_part
+  get "/comment/:id/comments", to: "comments#comments_part", defaults: { first: "false" }, as: :comment_comments_part
   get "/user/:id/follow_request/refresh", to: "users#follow_request", as: :user_follow_request
   delete :followships, to: "followships#destroy"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

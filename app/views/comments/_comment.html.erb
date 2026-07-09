@@ -24,12 +24,30 @@
             <div data-controller="visibility">
                 <button data-action="click->visibility#show">Respond</button>
                 <div data-visibility-target="formDiv" class="hidden">
-                    <%= form_with model: Comment.new, url: comment_comments_path(comment.id), data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
+                    <%= form_with model: Comment.new, url: comment_comments_path(comment.id, comment.comments_count > 0 ? nil : {first_comment: "true"}), data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
                         <%= form.textarea :content, size: "5x5" %>
                         <%= form.submit "Create" %>
                         <%= button_tag "Cancel", type: :button, data: { action: "click->visibility#hide"} %>
                     <% end %>
                 </div>
+            </div>
+            <%# ["showButton", "hideButton", "commentSection"] %>
+            <div id="comments-main-<%= comment.id %>" class="<%= comment.comments_count > 0 ? "" : "hidden" %>" data-controller="comments-visibility">
+                    <div class="hidden comment-visibility-<%= comment.id %>" data-comments-visibility-target="commentSection">
+                        <div id="comments-placeholder-<%=  comment.id %>">
+                        </div>
+                    <%# UPDATE THIS DIV IF THERE IS MORE TO HAVE THE LOAD MORE BUTTON ELSE UPDATE TO HAVE NOTHING %>
+                        <div id="load-more-<%= comment.id %>">
+                        </div>
+                    </div>
+                    <div>
+                        <% if comment.comments_count > 0 %>
+                            <%= button_to "Show Comments", comment_comments_part_path(comment.id, first: "true", format: :turbo_stream), method: "get", form: {id: "show-button-#{comment.id}" } %>
+                        <% else %>
+                            <button class="hidden" id="show-button-<%= comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#show">Show Comments</button>
+                        <% end %>
+                        <button class="hidden comment-visibility-<%= comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#hide">Hide Comments</button>
+                    </div>
             </div>
         <%end %>
         <div id="likes-comment-number-<%= comment.id %>"> <%= comment.likes_count %> </div>

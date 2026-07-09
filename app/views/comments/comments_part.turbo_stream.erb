@@ -1,0 +1,38 @@
+<%# DO ALL THE THINGS HERE MOSTLY- STILL MISSING STIMULUS STUFF FOR FIRST CLICK- IN COMMENT ADD BUTTON_TO THIS METHOD %>
+<%# REPLACE THE PLACEHOLDER ID- ADD THE LOAD MORE IF THERE IS NEXT PAGE OR ADD NOTHING- REPLACE THE BUTTON %>
+<%# FOR ELSE JUST APPEND THE NEW COMMENTS AND ADD BUTTON OR REMOVE IT/ADD NOTHING %>
+<%# ADD PROPER FORM TO COMMENT PAGE FOR SHOW COMMENTS BUTTON FOR THE CORRECT FIRST GET REQUEST %>
+<%# MISSING STIMULUS STILL %>
+<%# STILL GOTTA ADD DATA ATTRIBUTES FOR STIMILUS <------------ DO THIS %>
+<%# STILL GOTTA DISABLE BUTTON WHEN CLICKEDIN COMMENT PAGE AND WAIT FOR A REPLY %>
+<%# STILL ALSO MISSING ADDING EVERYTHING NEEDED WHEN YOU COMMENT ON A COMMENT FOR THE FIRST TIME AND IT HAD 0 COMMENTS- MAYBE SEND SOME EXTRA QUERY REGARDING FIRST COMMENT %>
+<%# ON DESTROY WILL HAVE TO REMOVE THE WHOLE SECTION AGAIN AND ATTACH SOMETHING BACK TO FORM MAYBE OR JUST REPLACE FORM %>
+<%# ON CREATE REPLACE FORM TO REMOVE THE THING AND ADD EVERYTHING INSIDE BUT DONT RENDER THE COMMENT- HIGHLY LIKELY THE WEBSOCKET IS SLOWER %>
+<%# MAYBE ONLY HIDE THE DIV NOT HAVE IT REMOVED COMPLETELY- IF ITS FIRST COMMENT JUST REPLACE THE SHOW BUTTON AND THE COMMENTS PLACEHOLDER TO RECEIVE THE WEBSOCKET%>
+<%# ALSO MAKE MAIN DIV VISABLE %>
+<%# ON DELETE JUST MAKE THE MAIN DIV HIDDEN AND CHANGE COMMENTS SECTION TO PLACEHOLDER MAYBE- MAYBE PLACEHOLDER ISNT A THING AND WE ALWAYS LISTEN TO NEW COMMENTS%>
+<%# FOR CREATE AND DELETE JUST ADD OR REMOVE THE QUERY FROM ACTION - JUST REPLACE IT WITH A NEW URL- AND CHANGE TO OR FROM PLACEHOLDER DIV %>
+<%# AND HIDE OR SHOW MAIN DIV - USE THE CUSTOM ACTION FOR THIS ONE %>
+<% if @first == "true" %>
+    <%= turbo_stream.replace "comments-placeholder-#{@comment.id}" do %>
+        <div id="comment-comments-<%= @comment.id %>"> 
+            <%= render partial: "comments/comment", collection: @comments %>
+        </div>
+    <% end %>
+    <%= turbo_stream.replace "show-button-#{@comment.id}" do %>
+        <button class="hidden" id="show-button-<%= @comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#show">Show Comments</button>
+    <% end %>
+    <%= turbo_stream.action :remove_class, "comment-visibility-#{@comment.id}", class: "hidden"  %>
+<%else %>
+    <%= turbo_stream.append "comment-comments-#{@comment.id}" do %>
+        <%= render partial: "comments/comment", collection: @comments %>
+    <% end %>
+<% end %>
+<% if @pagy.next.present? %>
+    <%= turbo_stream.update "load-more-#{@comment.id}" do %>
+        <%= button_to "Load More", comment_comments_part_path(@comment.id, page: @pagy.next, format: :turbo_stream), method: "get" %>
+    <% end %>
+<% else %>
+    <%= turbo_stream.update "load-more-#{@comment.id}" do %>
+    <% end %>
+<% end %>
