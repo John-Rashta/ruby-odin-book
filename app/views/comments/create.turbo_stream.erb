@@ -1,5 +1,0 @@
-<% if @query_params == "true" %>
-    <%= turbo_stream.update "comments-main-#{comment.id}" do %>
-        <%= @comment.comment.comments_count %>
-    <% end %>
-<% end %>

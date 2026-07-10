@@ -1,7 +1,7 @@
 class CommentCreationJob < ApplicationJob
   queue_as :default
 
-  def perform(comment)
+  def perform(comment, first = false)
     # FOR COMMENT SHOW COMMENTS NEED TO PREPEND- FOR POST COMMENTS ASWELL - ONLY COMMENT COMMENTS IS APPEND
     comment_record = comment
     comment_html = ApplicationController.render(
@@ -20,6 +20,17 @@ class CommentCreationJob < ApplicationJob
         target: "comment-comments-#{comment_record.comment_id}",
         html: comment_html,
       )
+
+      if first
+        Turbo::StreamsChannel.broadcast_action_to(
+        "comment-#{comment_record.comment_id}",
+        target: "comments-main-#{comment_record.comment_id}",
+        action: "remove_class",
+        html: "",
+        attributes: {
+          class: "hidden"
+        })
+      end
     else
       Turbo::StreamsChannel.broadcast_prepend_to(
         "post-show-#{comment_record.post_id}",

@@ -42,19 +42,21 @@ class CommentsController < ApplicationController
         { post_id: parent[:post_id], comment_id: parent[:id], **comment_params }
       end
 
-    @query_params = params.include?(:first_comment) && params[:first_comment] == "true" ? "true" : nil
-
     @comment = current_user.created_comments.build(create_params)
     respond_to do |format|
       if @comment.save
         flash[:notice] = "Sucessfully created Comment"
         format.turbo_stream
         format.html { head :ok }
-        CommentCreationJob.perform_later(@comment)
         PostUpdateJob.perform_later(@comment.post_id, "comments_count", @comment.post.comments_count)
         if @comment.comment
           CommentUpdateJob.perform_later(@comment.comment_id, "comments_count", @comment.comment.comments_count)
+          if @comment.comment.comments_count == 1
+            CommentCreationJob.perform_later(@comment, true)
+            return
+          end
         end
+        CommentCreationJob.perform_later(@comment)
       else
         flash[:alert] = "Failed to create Comment"
         format.html { head :bad_request }
@@ -72,6 +74,9 @@ class CommentsController < ApplicationController
         PostUpdateJob.perform_later(@comment.post_id, "comments_count", @comment.post.comments_count)
         if @comment.comment
           CommentUpdateJob.perform_later(@comment.comment_id, "comments_count", @comment.comment.comments_count)
+          if @comment.comment.comments_count == 0
+            CommentDestructionJob.perform_later(@comment.comment_id)
+          end
         end
       else
         flash[:alert] = "Failed to delete comment!"

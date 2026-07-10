@@ -19,7 +19,7 @@ class CommentUpdateJob < ApplicationJob
           id: comment_id,
           data_type => data,
           type: "comment"
-        })
+      })
     end
   end
 end
