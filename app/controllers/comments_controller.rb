@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   # COMMENTS NESTED IN POSTS AND ALSO COMMENTS NESTED IN COMMENTS- DO IT SEPARATE- USE NAMESPACES OR SOMETHING
   # PROBABLY CHANGE NAMES CAUSE COMMENTS/ID/COMMENTS LOOKS BAD
   # CHECK IF COMMENT ID IS PRESENT AND GRAB THAT AND ITS ID AND POSTID OTHERWISE BUILD DIRECT COMMENT TO POST ID
-  before_action :set_own_comment, only: %i[ update edit ]
+  before_action :set_own_comment_or_return, only: %i[ update edit ]
   protect_from_forgery with: :exception
 
   def show
@@ -26,9 +26,9 @@ class CommentsController < ApplicationController
 
   # METHOD JUST FOR FETCHING COMMENTS FOR COMMENTS BELLOW COMMENTS
   def comments_part
-    @first = part_params
+    @first = part_filter_params
     @comment = Comment.eager_load(:creator, comments: :creator).find(params[:id])
-    @pagy, @comments = pagy(:countless, @comment.comments, limit: 10)
+    @pagy, @comments = pagy(:countless, @comment.comments, limit: 5)
     respond_to do |format|
       format.turbo_stream
     end
@@ -65,9 +65,9 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = current_user.created_comments.includes(:post, :comment, :creator).find(params[:id])
+    @comment = current_user.created_comments.includes(:post, :comment, :creator).find_by(id: params[:id])
     respond_to do |format|
-      if @comment.destroy
+      if @comment && @comment.destroy
         flash[:notice] = "Sucessfully deleted comment!"
         format.turbo_stream
         format.html { head :ok }
@@ -81,6 +81,7 @@ class CommentsController < ApplicationController
       else
         flash[:alert] = "Failed to delete comment!"
         format.html { head :bad_request }
+        format.turbo_stream { render :failed_find, locals: { comment_id: params[:id] }, status: :unprocessable_entity }
       end
     end
   end
@@ -101,12 +102,22 @@ class CommentsController < ApplicationController
 
    private
 
-  def set_own_comment
-    @comment = current_user.created_comments.find(params[:id])
+  def set_own_comment_or_return
+    @comment = current_user.created_comments.find_by(id: params[:id])
+    unless @comment
+      respond_to do |format|
+        format.html { head :not_found }
+        format.turbo_stream { render :failed_find, locals: { comment_id: params[:id] }, status: :unprocessable_entity }
+      end
+    end
   end
 
-  def part_params
-    params.expect(:first)
+  def part_filter_params
+    if params.include?(:first) && params[:first] == "true"
+      return "true"
+    end
+
+    "false"
   end
 
   def comment_params

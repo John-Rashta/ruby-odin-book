@@ -44,7 +44,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Comment.count", 0) do
       delete comment_url(comments(:one).id)
     end
-    assert_response :not_found
+    assert_response :bad_request
   end
 
   test "Can't delete comment that doesn't exist" do
@@ -52,7 +52,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Comment.count", 0) do
       delete comment_url(54456)
     end
-    assert_response :not_found
+    assert_response :bad_request
   end
 
   test "Edit Comment" do

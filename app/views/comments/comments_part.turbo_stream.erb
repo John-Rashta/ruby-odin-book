@@ -17,15 +17,17 @@
 <%# IF COMMENT HAS NO COMMENTS AKA COMMENT-COUNT IS 0 MAYBE JUST CHANGE THE HTML AND CLASSES TO BE WHAT A 0 COUNT COMMENT LOOKS LIKE %>
 
 <%# MISSING TESTING %>
+<%# STILL MISSING DISABLING BUTTON ON REQUEST%>
+<%# TEST BREAKING CONNECTION AND USING SHOW COMMENTS WHEN THERE ARE NONE%>
 <% if @comment.comments_count > 0 %>
     <% if @first == "true" %>
         <%= turbo_stream.update "comment-comments-#{@comment.id}" do %>
             <%= render partial: "comments/comment", collection: @comments %>
         <% end %>
         <%= turbo_stream.replace "show-button-#{@comment.id}" do %>
-            <button class="hidden" id="show-button-<%= @comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#show">Show Comments</button>
+            <button class="hidden" id="show-button-<%= @comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
         <% end %>
-        <%= turbo_stream.action :remove_class, ".comment-visibility-1-#{@comment.id}", class: "hidden"  %>
+        <%= turbo_stream_action_tag :remove_class, targets: ".comment-visibility-1-#{@comment.id}", class: "hidden" %>
     <%else %>
         <%= turbo_stream.append "comment-comments-#{@comment.id}" do %>
             <%= render partial: "comments/comment", collection: @comments %>
@@ -33,7 +35,7 @@
     <% end %>
     <% if @pagy.next.present? %>
         <%= turbo_stream.update "load-more-#{@comment.id}" do %>
-            <%= button_to "Load More", comment_comments_part_path(@comment.id, page: @pagy.next, format: :turbo_stream), method: "get" %>
+            <%= button_to "Load More", comment_comments_part_path(@comment.id, format: :turbo_stream), params: { page: @pagy.next }, method: "get" %>
         <% end %>
     <% else %>
         <%= turbo_stream.update "load-more-#{@comment.id}" do %>
@@ -46,9 +48,9 @@
         <% end %>
         <%= turbo_stream.update "load-more-#{@comment.id}" do %>
         <% end %>
-        <%= turbo_stream.action :add_class, "comments-main-#{@comment.id}", class: "hidden"  %>
-        <%= turbo_stream.action :add_class, ".comment-visibility-1-#{@comment.id}", class: "hidden"  %>
+        <%= turbo_stream_action_tag :add_class, target: "comments-main-#{@comment.id}", class: "hidden" %>
+        <%= turbo_stream_action_tag :add_class, targets: ".comment-visibility-1-#{@comment.id}", class: "hidden" %>
         <%= turbo_stream.replace "show-button-#{@comment.id}" do %>
-            <button id="show-button-<%= @comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#show">Show Comments</button>
+            <button id="show-button-<%= @comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
         <% end %>
 <% end %>

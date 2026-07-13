@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   include Pagy::Method
-  before_action :set_own_post, only: %i[ update destroy edit part ]
+  before_action :set_own_post_or_return, only: %i[ update destroy edit part ]
   before_action :validate_params, only: %i[ update create ]
   protect_from_forgery with: :exception
 
@@ -54,6 +54,7 @@ class PostsController < ApplicationController
       else
         flash[:alert] = "Failed to delete post!"
         format.html { head :bad_request }
+        format.turbo_stream { render :failed_destroy, locals: { post_id: params[:id] }, status: :unprocessable_entity }
       end
     end
   end
@@ -76,8 +77,14 @@ class PostsController < ApplicationController
 
   private
 
-  def set_own_post
-    @post = current_user.created_posts.includes(:creator).find(params[:id])
+  def set_own_post_or_return
+    @post = current_user.created_posts.includes(:creator).find_by(id: params[:id])
+    unless @post
+      respond_to do |format|
+        format.html { head :not_found }
+        format.turbo_stream { render :failed_find, locals: { post_id: params[:id] }, status: :unprocessable_entity }
+      end
+    end
   end
 
   def post_params
