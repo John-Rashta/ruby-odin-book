@@ -1,8 +1,13 @@
 <%= turbo_stream_from "comment-show-#{@comment.id}" %>
 <%= render @comment, {no_response: true}  %>
 <%= form_with model: Comment.new, url: comment_comments_path(@comment.id), data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
-    <%= form.textarea :content, size: "5x5" %>
-    <%= form.submit "Create" %>
+    <%= form.textarea :content, size: "5x5", data: {
+            form_target: "field",
+            action: "input->form#disableIfEmptyFields"
+        } %>
+    <%= form.submit "Create", data: {
+            form_target: "submit",
+        } %>
 <% end %>
 <div id="comment-show-comments-<%= @comment.id %>">
     <%= render partial: "comment", collection: @comments %>

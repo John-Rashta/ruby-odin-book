@@ -1,9 +1,17 @@
 <%= turbo_stream_from "feed-#{current_user.id}" %>
 <main>
     <%= form_with model: Post.new, data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
-        <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp"  %>
-        <%= form.rich_textarea :content %>
-        <%= form.submit "Post" %>
+        <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
+            form_target: "field",
+            action: "input->form#disableIfEmptyFields"
+        }  %>
+        <%= form.rich_textarea :content, data: {
+            form_target: "field",
+            action: "input->form#disableIfEmptyFields trix-attachment-add->form#disableIfEmptyFields trix-attachment-remove->form#disableIfEmptyFields"
+        } %>
+        <%= form.submit "Post", data: {
+            form_target: "submit",
+        } %>
     <% end %>
     <div id="feed-<%= current_user.id %>">
         <%= render @posts%>

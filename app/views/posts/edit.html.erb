@@ -1,8 +1,16 @@
 <%= turbo_frame_tag @post do %>
-    <%= form_with model: @post, method: :patch do |form| %>
-        <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp"  %>
-        <%= form.rich_textarea :content, value: @post.try(:postable).try(:content) %>
-        <%= form.submit "Update" %>
+    <%= form_with model: @post, method: :patch, data: { controller: :form } do |form| %>
+        <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
+            form_target: "field",
+            action: "input->form#disableIfEmptyFields"
+        }  %>
+        <%= form.rich_textarea :content, value: @post.try(:postable).try(:content), data: {
+            form_target: "field",
+            action: "input->form#disableIfEmptyFields trix-attachment-add->form#disableIfEmptyFields trix-attachment-remove->form#disableIfEmptyFields"
+        } %>
+        <%= form.submit "Update", data: {
+            form_target: "submit",
+        } %>
     <% end %>
     <%= button_to "Cancel", post_part_path(@post.id), method: "get" %>
 <% end %>

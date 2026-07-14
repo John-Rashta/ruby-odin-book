@@ -1,7 +1,12 @@
 <%= turbo_frame_tag @comment do %>
-    <%= form_with model: @comment, method: :patch do |form| %>
-        <%= form.textarea :content, size: "5x5", value: @comment.content %>
-        <%= form.submit "Update" %>
+    <%= form_with model: @comment, method: :patch, data: { controller: :form } do |form| %>
+        <%= form.textarea :content, size: "5x5", value: @comment.content, data: {
+            form_target: "field",
+            action: "input->form#disableIfEmptyFields"
+        } %>
+        <%= form.submit "Update", data: {
+            form_target: "submit",
+        } %>
     <% end %>
     <%= button_to "Cancel", comment_part_path(@comment.id), method: "get" %>
 <% end %>

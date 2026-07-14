@@ -25,8 +25,13 @@
                 <button data-action="click->visibility#show">Respond</button>
                 <div data-visibility-target="formDiv" class="hidden">
                     <%= form_with model: Comment.new, url: comment_comments_path(comment.id), data: { controller: :form, action: "turbo:submit-end->form#clear turbo:submit-end->visibility#hide" } do |form| %>
-                        <%= form.textarea :content, size: "5x5" %>
-                        <%= form.submit "Create" %>
+                        <%= form.textarea :content, size: "5x5", data: {
+                            form_target: "field",
+                            action: "input->form#disableIfEmptyFields"
+                        } %>
+                        <%= form.submit "Create", data: {
+                            form_target: "submit",
+                        } %>
                         <%= button_tag "Cancel", type: :button, data: { action: "click->visibility#hide"} %>
                     <% end %>
                 </div>
