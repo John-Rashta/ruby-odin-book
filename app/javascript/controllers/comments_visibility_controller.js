@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
-    static targets = ["showButton", "hideButton", "commentSection"]
+    static targets = ["showButton", "hideButton", "commentSection", "commentMain", "commentsContainer"]
     show() {
         this.showButtonTarget.classList.add("hidden");
         this.commentSectionTarget.classList.remove("hidden");
@@ -8,6 +8,9 @@ export default class extends Controller {
     }
 
     hide() {
+        if (this.commentsContainerTarget.children.length === 0) {
+            this.commentMainTarget.classList.add("hidden");
+        }
         this.hideButtonTarget.classList.add("hidden");
         this.commentSectionTarget.classList.add("hidden");
         this.showButtonTarget.classList.remove("hidden");

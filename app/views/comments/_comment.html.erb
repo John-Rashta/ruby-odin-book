@@ -1,4 +1,5 @@
-<div id="comment-<%= comment.id %>">
+<% depth = local_assigns.fetch(:depth, 1) %>
+<div id="comment-<%= comment.id %>" class="<%= local_assigns[:class] || ""%>">
     <%= turbo_stream_from "comment-#{comment.id}" %>
     <%= turbo_frame_tag comment do %>
         <% if local_assigns[:just_created] || current_user && current_user.id == comment.creator.id  %>
@@ -24,7 +25,7 @@
             <div data-controller="visibility">
                 <button data-action="click->visibility#show">Respond</button>
                 <div data-visibility-target="formDiv" class="hidden">
-                    <%= form_with model: Comment.new, url: comment_comments_path(comment.id), data: { controller: :form, action: "turbo:submit-end->form#clear turbo:submit-end->visibility#hide" } do |form| %>
+                    <%= form_with model: Comment.new, url: comment_comments_path(comment.id, depth: depth + 1), data: { controller: :form, action: "turbo:submit-end->form#clear turbo:submit-end->visibility#hide" } do |form| %>
                         <%= form.textarea :content, size: "5x5", data: {
                             form_target: "field",
                             action: "input->form#disableIfEmptyFields"
@@ -37,9 +38,10 @@
                 </div>
             </div>
             <%# ["showButton", "hideButton", "commentSection"] %>
-            <div id="comments-main-<%= comment.id %>" class="<%= comment.comments_count > 0 ? "" : "hidden" %>" data-controller="comments-visibility">
+            <% if depth < 5 %>
+            <div id="comments-main-<%= comment.id %>" class="<%= comment.comments_count > 0 ? "" : "hidden" %>" data-controller="comments-visibility" data-comments-visibility-target="commentMain">
                     <div class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="commentSection">
-                        <div id="comment-comments-<%=  comment.id %>">
+                        <div id="comment-comments-<%=  comment.id %>" data-comments-visibility-target="commentsContainer">
                         </div>
                     <%# UPDATE THIS DIV IF THERE IS MORE TO HAVE THE LOAD MORE BUTTON ELSE UPDATE TO HAVE NOTHING %>
                         <div id="load-more-<%= comment.id %>">
@@ -47,13 +49,16 @@
                     </div>
                     <div>
                         <% if comment.comments_count > 0 %>
-                            <%= button_to "Show Comments", comment_comments_part_path(comment.id, format: :turbo_stream), params: { first: "true" }, method: "get", form: {id: "show-button-#{comment.id}" } %>
+                            <%= button_to "Show Comments", comment_comments_part_path(comment.id, format: :turbo_stream), params: { first: "true", depth: depth + 1 }, method: "get", form: {id: "show-button-#{comment.id}" } %>
                         <% else %>
                             <button id="show-button-<%= comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
                         <% end %>
                         <button class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#hide">Hide Comments</button>
                     </div>
             </div>
+            <% else %>
+                <%= button_to "Go to Comment", comment_path(comment.id), method: "get", form: { data: { turbo_frame: "_top" } } %>
+            <% end %>
         <%end %>
         <div id="likes-comment-number-<%= comment.id %>"> <%= comment.likes_count %> </div>
         <div id="comments-comment-number-<%= comment.id %>"> <%= comment.comments_count %> </div>

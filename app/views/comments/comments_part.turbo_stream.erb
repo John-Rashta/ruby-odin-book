@@ -22,7 +22,7 @@
 <% if @comment.comments_count > 0 %>
     <% if @first == "true" %>
         <%= turbo_stream.update "comment-comments-#{@comment.id}" do %>
-            <%= render partial: "comments/comment", collection: @comments %>
+            <%= render partial: "comments/comment", collection: @comments, locals: { depth: @depth } %>
         <% end %>
         <%= turbo_stream.replace "show-button-#{@comment.id}" do %>
             <button class="hidden" id="show-button-<%= @comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
@@ -30,7 +30,7 @@
         <%= turbo_stream_action_tag :remove_class, targets: ".comment-visibility-1-#{@comment.id}", class: "hidden" %>
     <%else %>
         <%= turbo_stream.append "comment-comments-#{@comment.id}" do %>
-            <%= render partial: "comments/comment", collection: @comments %>
+            <%= render partial: "comments/comment", collection: @comments, locals: { depth: @depth } %>
         <% end %>
     <% end %>
     <% if @pagy.next.present? %>

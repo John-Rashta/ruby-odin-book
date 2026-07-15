@@ -1,12 +1,12 @@
 class CommentCreationJob < ApplicationJob
   queue_as :default
 
-  def perform(comment, first = false)
+  def perform(comment, depth = 1, first = false)
     # FOR COMMENT SHOW COMMENTS NEED TO PREPEND- FOR POST COMMENTS ASWELL - ONLY COMMENT COMMENTS IS APPEND
     comment_record = comment
     comment_html = ApplicationController.render(
       partial: "comments/comment",
-      locals: { comment: comment_record, current_user: { id: nil }, just_created: true }
+      locals: { comment: comment_record, current_user: { id: nil }, just_created: true, depth: depth }
     )
 
     if comment_record.comment_id

@@ -1,3 +1,4 @@
+<%# TODO MOVE THIS TO POST PARTIAL - DO THE SAME FOR COMMENT - MAYBE DONT EVEN NEED AN EDITING ROUTE - JUST SWITCH HIDDEN TAGS ON A CLICK %>
 <%= turbo_frame_tag @post do %>
     <%= form_with model: @post, method: :patch, data: { controller: :form } do |form| %>
         <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {

@@ -41,3 +41,9 @@ Turbo.StreamActions.remove_class = function() {
   const className = this.getAttribute("class")
   this.targetElements.forEach(element => element.classList.remove(className))
 };
+
+document.addEventListener("turbo:before-visit", function(event) {
+  if (event.detail.url === window.location.href) {
+    event.preventDefault();
+  }
+});

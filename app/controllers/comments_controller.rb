@@ -26,6 +26,7 @@ class CommentsController < ApplicationController
 
   # METHOD JUST FOR FETCHING COMMENTS FOR COMMENTS BELLOW COMMENTS
   def comments_part
+    @depth = part_depth_params.to_i
     @first = part_filter_params
     @comment = Comment.eager_load(:creator, comments: :creator).find(params[:id])
     @pagy, @comments = pagy(:countless, @comment.comments, limit: 5)
@@ -52,11 +53,11 @@ class CommentsController < ApplicationController
         if @comment.comment
           CommentUpdateJob.perform_later(@comment.comment_id, "comments_count", @comment.comment.comments_count)
           if @comment.comment.comments_count == 1
-            CommentCreationJob.perform_later(@comment, true)
+            CommentCreationJob.perform_later(@comment, get_depth_params_or_default, true)
             return
           end
         end
-        CommentCreationJob.perform_later(@comment)
+        CommentCreationJob.perform_later(@comment, get_depth_params_or_default)
       else
         flash[:alert] = "Failed to create Comment"
         format.html { head :bad_request }
@@ -100,7 +101,15 @@ class CommentsController < ApplicationController
     end
   end
 
-   private
+  private
+
+  def get_depth_params_or_default
+    if params.include?(:depth) && params[:depth].to_i.between?(1, 10)
+      params[:depth].to_i
+    else
+      1
+    end
+  end
 
   def set_own_comment_or_return
     @comment = current_user.created_comments.find_by(id: params[:id])
@@ -118,6 +127,10 @@ class CommentsController < ApplicationController
     end
 
     "false"
+  end
+
+  def part_depth_params
+    params.expect(:depth)
   end
 
   def comment_params
