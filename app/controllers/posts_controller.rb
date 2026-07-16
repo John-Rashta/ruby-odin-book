@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   include Pagy::Method
-  before_action :set_own_post_or_return, only: %i[ update destroy edit part ]
+  before_action :set_own_post_or_return, only: %i[ update destroy ]
   before_action :validate_params, only: %i[ update create ]
   protect_from_forgery with: :exception
 
@@ -25,11 +25,6 @@ class PostsController < ApplicationController
     end
   end
 
-  def part
-  end
-
-  def edit
-  end
   def create
     @post = current_user.created_posts.build(postable: ContentCreation.new.create_content(post_params))
     respond_to do |format|

@@ -10,13 +10,11 @@ Rails.application.routes.draw do
   resources :users, only: [ :show, :index ]
   resources :requests, only: [ :create, :index, :destroy ]
   resources :followships, only: [ :create, :index ]
-  resources :posts, only: [ :create, :destroy, :update, :index, :show, :edit ], concerns: [ :likable, :comentable ]
-  resources :comments, only: [ :destroy, :update, :show, :edit ], concerns: [ :likable, :comentable ]
+  resources :posts, only: [ :create, :destroy, :update, :index, :show ], concerns: [ :likable, :comentable ]
+  resources :comments, only: [ :destroy, :update, :show ], concerns: [ :likable, :comentable ]
   get "/followships/followers", to: "followships#followers"
   get "/requests/sent", to: "requests#sent_requests"
   put "/users/avatar", to: "users#change_avatar"
-  get "/post/:id/part", to: "posts#part", as: :post_part
-  get "/comment/:id/part", to: "comments#part", as: :comment_part
   get "/comment/:id/comments", to: "comments#comments_part", as: :comment_comments_part
   get "/user/:id/follow_request/refresh", to: "users#follow_request", as: :user_follow_request
   delete :followships, to: "followships#destroy"

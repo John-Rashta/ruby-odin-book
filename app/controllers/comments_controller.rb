@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   # COMMENTS NESTED IN POSTS AND ALSO COMMENTS NESTED IN COMMENTS- DO IT SEPARATE- USE NAMESPACES OR SOMETHING
   # PROBABLY CHANGE NAMES CAUSE COMMENTS/ID/COMMENTS LOOKS BAD
   # CHECK IF COMMENT ID IS PRESENT AND GRAB THAT AND ITS ID AND POSTID OTHERWISE BUILD DIRECT COMMENT TO POST ID
-  before_action :set_own_comment_or_return, only: %i[ update edit ]
+  before_action :set_own_comment_or_return, only: %i[ update ]
   protect_from_forgery with: :exception
 
   def show
@@ -15,13 +15,6 @@ class CommentsController < ApplicationController
       format.html
       format.turbo_stream
     end
-  end
-
-  def edit
-  end
-
-  def part
-    @comment = current_user.created_comments.eager_load(:creator).find(params[:id])
   end
 
   # METHOD JUST FOR FETCHING COMMENTS FOR COMMENTS BELLOW COMMENTS

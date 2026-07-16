@@ -1,1 +1,5 @@
-<%= turbo_stream.update "comment-#{@comment.id}", @comment %>
+<%= turbo_stream_action_tag :add_class, target: "edit-content-comment-#{@comment.id}", class: "hidden" %>
+<%= turbo_stream_action_tag :remove_class, target: "main-content-comment-#{@comment.id}", class: "hidden" %>
+<%= turbo_stream.update "comment-content-#{@comment.id}" do %>
+    <%= @comment.content %>
+<% end %>

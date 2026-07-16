@@ -1,66 +1,85 @@
 <% depth = local_assigns.fetch(:depth, 1) %>
-<div id="comment-<%= comment.id %>" class="<%= local_assigns[:class] || ""%>">
+<div id="comment-<%= comment.id %>" class="<%= local_assigns[:class] || ""%>" data-controller="edit-visibility">
     <%= turbo_stream_from "comment-#{comment.id}" %>
-    <%= turbo_frame_tag comment do %>
-        <% if local_assigns[:just_created] || current_user && current_user.id == comment.creator.id  %>
-        <div class="<%= local_assigns[:just_created] ? "hidden" : "" %>" <%= tag.attributes(
-            data: ({
-                controller: "options",
-                "options-creatorid-value" => comment.creator.id
-            } if local_assigns[:just_created]
-            )
-        )%>>
-            <%= button_to "X", comment_path(comment.id) , method: "delete" %>
-            <%= button_to "edit", edit_comment_path(comment.id), method: "get" %>
-        </div>
-        <% end %>
-        <div> <%= comment.creator.username %> </div>
-        <div id="comment-content-<%= comment.id %>" > <%= comment.content %> </div>
-        <% if current_user %>
-            <div id="like-comment-<%= comment.id %>">
-                <%= render partial: "application/likeform", locals: {just_created: local_assigns[:just_created], content: comment, type: "comment" } %>
-            </div>
-        <% end %>
-        <% unless local_assigns[:no_response] %>
-            <div data-controller="visibility">
-                <button data-action="click->visibility#show">Respond</button>
-                <div data-visibility-target="formDiv" class="hidden">
-                    <%= form_with model: Comment.new, url: comment_comments_path(comment.id, depth: depth + 1), data: { controller: :form, action: "turbo:submit-end->form#clear turbo:submit-end->visibility#hide" } do |form| %>
-                        <%= form.textarea :content, size: "5x5", data: {
-                            form_target: "field",
-                            action: "input->form#disableIfEmptyFields"
-                        } %>
-                        <%= form.submit "Create", data: {
-                            form_target: "submit",
-                        } %>
-                        <%= button_tag "Cancel", type: :button, data: { action: "click->visibility#hide"} %>
-                    <% end %>
-                </div>
-            </div>
-            <%# ["showButton", "hideButton", "commentSection"] %>
-            <% if depth < 5 %>
-            <div id="comments-main-<%= comment.id %>" class="<%= comment.comments_count > 0 ? "" : "hidden" %>" data-controller="comments-visibility" data-comments-visibility-target="commentMain">
-                    <div class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="commentSection">
-                        <div id="comment-comments-<%=  comment.id %>" data-comments-visibility-target="commentsContainer">
-                        </div>
-                    <%# UPDATE THIS DIV IF THERE IS MORE TO HAVE THE LOAD MORE BUTTON ELSE UPDATE TO HAVE NOTHING %>
-                        <div id="load-more-<%= comment.id %>">
-                        </div>
-                    </div>
-                    <div>
-                        <% if comment.comments_count > 0 %>
-                            <%= button_to "Show Comments", comment_comments_part_path(comment.id, format: :turbo_stream), params: { first: "true", depth: depth + 1 }, method: "get", form: {id: "show-button-#{comment.id}" } %>
-                        <% else %>
-                            <button id="show-button-<%= comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
-                        <% end %>
-                        <button class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#hide">Hide Comments</button>
-                    </div>
-            </div>
-            <% else %>
-                <%= button_to "Go to Comment", comment_path(comment.id), method: "get", form: { data: { turbo_frame: "_top" } } %>
+    <div>
+        <div class="hidden" data-edit-visibility-target="editDiv" id="edit-content-comment-<%= comment.id %>">
+            <% if local_assigns[:just_created] || current_user && current_user.id == comment.creator.id  %>
+                <%= form_with model: comment, method: :patch, data: { controller: :form } do |form| %>
+                    <%= form.textarea :content, size: "5x5", value: comment.content, data: {
+                        form_target: "field",
+                        action: "input->form#disableIfEmptyFields"
+                    } %>
+                    <%= form.submit "Update", data: {
+                        form_target: "submit",
+                    } %>
+                <% end %>
+                <button data-action="click->edit-visibility#hide">Cancel</button>
             <% end %>
-        <%end %>
-        <div id="likes-comment-number-<%= comment.id %>"> <%= comment.likes_count %> </div>
-        <div id="comments-comment-number-<%= comment.id %>"> <%= comment.comments_count %> </div>
-    <% end %>
+        </div>
+        <div data-edit-visibility-target="mainDiv" id="main-content-comment-<%= comment.id %>">
+            <% if local_assigns[:just_created] || current_user && current_user.id == comment.creator.id  %>
+                <div class="<%= local_assigns[:just_created] ? "hidden" : "" %>" <%= tag.attributes(
+                    data: ({
+                        controller: "options",
+                        "options-creatorid-value" => comment.creator.id
+                    } if local_assigns[:just_created]
+                    )
+                )%>>
+                    <%= button_to "X", comment_path(comment.id) , method: "delete" %>
+                    <button data-action="click->edit-visibility#show">Edit</button>
+                </div>
+            <% end %>
+            <div> <%= comment.creator.username %> </div>
+            <%= link_to comment_path(comment.id), class: "content-link #{local_assigns[:class] && local_assigns[:class] == "show-element" ? "content-link-disabled" : ""}", 
+                data: { turbo_frame: "_top" } do %>
+                <div id="comment-content-<%= comment.id %>" > <%= comment.content %> </div>
+            <% end %>
+            <% if current_user %>
+                <div id="like-comment-<%= comment.id %>">
+                    <%= render partial: "application/likeform", locals: {just_created: local_assigns[:just_created], content: comment, type: "comment" } %>
+                </div>
+            <% end %>
+            <div id="likes-comment-number-<%= comment.id %>"> <%= comment.likes_count %> </div>
+            <div id="comments-comment-number-<%= comment.id %>"> <%= comment.comments_count %> </div>
+        </div>
+    </div>
+    <% unless local_assigns[:no_response] %>
+        <div data-controller="visibility">
+            <button data-action="click->visibility#show">Respond</button>
+            <div data-visibility-target="formDiv" class="hidden">
+                <%= form_with model: Comment.new, url: comment_comments_path(comment.id, depth: depth + 1), data: { controller: :form, action: "turbo:submit-end->form#clear turbo:submit-end->visibility#hide" } do |form| %>
+                    <%= form.textarea :content, size: "5x5", data: {
+                        form_target: "field",
+                        action: "input->form#disableIfEmptyFields"
+                    } %>
+                    <%= form.submit "Create", data: {
+                        form_target: "submit",
+                    } %>
+                    <%= button_tag "Cancel", type: :button, data: { action: "click->visibility#hide"} %>
+                <% end %>
+            </div>
+        </div>
+        <%# ["showButton", "hideButton", "commentSection"] %>
+        <% if depth < 5 %>
+        <div id="comments-main-<%= comment.id %>" class="<%= comment.comments_count > 0 ? "" : "hidden" %>" data-controller="comments-visibility" data-comments-visibility-target="commentMain">
+                <div class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="commentSection">
+                    <div id="comment-comments-<%=  comment.id %>" data-comments-visibility-target="commentsContainer">
+                    </div>
+                <%# UPDATE THIS DIV IF THERE IS MORE TO HAVE THE LOAD MORE BUTTON ELSE UPDATE TO HAVE NOTHING %>
+                    <div id="load-more-<%= comment.id %>">
+                    </div>
+                </div>
+                <div>
+                    <% if comment.comments_count > 0 %>
+                        <%= button_to "Show Comments", comment_comments_part_path(comment.id, format: :turbo_stream), params: { first: "true", depth: depth + 1 }, method: "get", form: {id: "show-button-#{comment.id}" } %>
+                    <% else %>
+                        <button id="show-button-<%= comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
+                    <% end %>
+                    <button class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#hide">Hide Comments</button>
+                </div>
+        </div>
+        <% else %>
+            <%= button_to "Go to Comment", comment_path(comment.id), method: "get", form: { data: { turbo_frame: "_top" } } %>
+        <% end %>
+    <%end %>
 </div>

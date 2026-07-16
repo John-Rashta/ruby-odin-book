@@ -4,7 +4,7 @@ export default class extends Controller {
     connect() {
         const meta = document.querySelector('meta[name="current-user-id"]')
         const currentUserId = meta ? parseInt(meta.content) : null
-        if (currentUserId && currentUserId == this.creatoridValue) {
+        if (currentUserId && currentUserId === this.creatoridValue) {
             this.element.classList.remove("hidden");
         };
     }

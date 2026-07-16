@@ -12,3 +12,13 @@ main {
 .hidden {
     display: none !important;
 }
+/* IF SHOW ELEMENT IS PRESENT ADD A CERTAIN CLASS TO THE LINK TO DISABLE IT AND USE THAT CLASS FOR THIS INSTEAD OF CHECKING CHILDREN */
+.content-link-disabled {
+    cursor: text !important;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.content-link-disabled:active {
+    pointer-events: none;
+}
