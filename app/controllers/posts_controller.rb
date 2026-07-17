@@ -6,7 +6,7 @@ class PostsController < ApplicationController
 
   # FEED
   def index
-    @pagy, @posts = pagy(:countless, Post.eager_load(:creator).order(created_at: :desc).where(creator_id: [ current_user.id ].concat(current_user.followings.ids)), limit: 15)
+    @pagy, @posts = pagy(:countless, Post.preload(:creator, postable: [ image_attachment: { blob: { variant_records: { image_attachment: :blob } } }, rich_text_content: { embeds_attachments: { blob: { variant_records: :blob } } } ], liked: :user).order(created_at: :desc).where(creator_id: [ current_user.id ].concat(current_user.followings.ids)), limit: 15)
 
     respond_to do |format|
       format.html
@@ -15,9 +15,9 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.eager_load(:creator, direct_comments: :creator).find(params[:id])
+    @post = Post.preload(:creator, postable: [ image_attachment: { blob: { variant_records: { image_attachment: :blob } } }, rich_text_content: { embeds_attachments: :blob } ], liked: :user).find(params[:id])
 
-    @pagy, @direct_comments = pagy(:countless, @post.direct_comments, limit: 15)
+    @pagy, @direct_comments = pagy(:countless, @post.direct_comments.eager_load(:creator, liked: :user), limit: 15)
 
     respond_to do |format|
       format.html

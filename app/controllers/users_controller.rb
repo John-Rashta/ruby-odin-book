@@ -1,11 +1,23 @@
 class UsersController < ApplicationController
+  include Pagy::Method
   protect_from_forgery with: :exception
   before_action :validate_image, only: %i[ change_avatar ]
   def index
-    @users = User.eager_load(:followed, :follow_request_by_current).where.not(id: current_user.id).all
+    @pagy, @users = pagy(:countless,  User.eager_load(:followed, :follow_request_by_current).where.not(id: current_user.id).all, limit: 15)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
   def show
-    @user = User.eager_load(created_posts: :creator).order("created_posts.created_at"=> :desc).find(params[:id])
+    @user = User.eager_load(:followed, :follow_request_by_current).find(params[:id])
+
+    @pagy, @posts = pagy(:countless, @user.created_posts.preload(:creator, liked: :user, postable: [ image_attachment: { blob: { variant_records: { image_attachment: :blob } } }, rich_text_content: { embeds_attachments: { blob: { variant_records: :blob } } } ]).order(posts: :desc), limit: 15)
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def follow_request

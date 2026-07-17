@@ -1,0 +1,9 @@
+<%= turbo_stream.append "posts-#{@user.id}" do %>
+  <%= render partial: "posts/post", collection: @posts %>
+<% end %>
+
+<% if @pagy.next.present? %>
+  <%= turbo_stream.replace :next_page do %>
+    <%= turbo_frame_tag :next_page, src: user_path(@user.id, page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+  <% end %>
+<% end %>

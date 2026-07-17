@@ -9,8 +9,8 @@ class CommentsController < ApplicationController
   protect_from_forgery with: :exception
 
   def show
-    @comment = Comment.eager_load(:creator, comments: :creator).order("comments_comments.created_at": :desc).find(params[:id])
-    @pagy, @comments = pagy(:countless, @comment.comments, limit: 15)
+    @comment = Comment.eager_load(:creator, liked: :user).find(params[:id])
+    @pagy, @comments = pagy(:countless, @comment.comments.eager_load(:creator, liked: :user).order(created_at: :desc), limit: 15)
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -21,10 +21,14 @@ class CommentsController < ApplicationController
   def comments_part
     @depth = part_depth_params.to_i
     @first = part_filter_params
-    @comment = Comment.eager_load(:creator, comments: :creator).find(params[:id])
-    @pagy, @comments = pagy(:countless, @comment.comments, limit: 5)
+    @comment = Comment.eager_load(:creator, liked: :user).find_by(id: params[:id])
     respond_to do |format|
-      format.turbo_stream
+      if !@comment
+        format.turbo_stream { render :failed_find, locals: { comment_id: params[:id] }, status: :unprocessable_entity }
+      else
+        @pagy, @comments = pagy(:countless, @comment.comments.eager_load(:creator, liked: :user), limit: 5)
+        format.turbo_stream
+      end
     end
   end
   def create

@@ -1,0 +1,9 @@
+<%= turbo_stream.append "users-index" do %>
+  <%= render @users %>
+<% end %>
+
+<% if @pagy.next.present? %>
+  <%= turbo_stream.replace :next_page do %>
+    <%= turbo_frame_tag :next_page, src: users_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+  <% end %>
+<% end %>

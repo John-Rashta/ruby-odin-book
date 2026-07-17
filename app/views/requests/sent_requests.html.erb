@@ -1,3 +1,5 @@
+<%# SENT REQUESTS DONT GET ADDED BY WEBSOCKET - IF 2 PAGES OPEN THE SECOND WONT GET THE REQUEST %>
+<%# MIGHT ADD A BROADCAST JOB JUST FOR THIS AND ADD THE USER ID TO THE DIV ID %>
 <div id="sent-requests">
     <% unless @sent_requests.empty? %>
         <%= render partial: "request", collection: @sent_requests %>

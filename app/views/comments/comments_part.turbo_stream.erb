@@ -14,7 +14,7 @@
     <% end %>
     <% if @pagy.next.present? %>
         <%= turbo_stream.update "load-more-#{@comment.id}" do %>
-            <%= button_to "Load More", comment_comments_part_path(@comment.id, format: :turbo_stream), params: { page: @pagy.next }, method: "get" %>
+            <%= button_to "Load More", comment_comments_part_path(@comment.id, format: :turbo_stream), params: { page: @pagy.next, depth: @depth }, method: "get" %>
         <% end %>
     <% else %>
         <%= turbo_stream.update "load-more-#{@comment.id}" do %>

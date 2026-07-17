@@ -12,3 +12,6 @@
 <div id="comment-show-comments-<%= @comment.id %>">
     <%= render partial: "comment", collection: @comments %>
 </div>
+<% if @pagy.next.present? %>
+    <%= turbo_frame_tag :next_page, src: comment_path(@comment.id, page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+<% end %>
