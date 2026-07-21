@@ -1,12 +1,21 @@
 class RequestsController < ApplicationController
-  # DO BUTTONS TO CANCEL SENT AND REFUSE RECEIVED
+  include Pagy::Method
+  # MIGHT REQUIRE TESTING PAGY
   protect_from_forgery with: :exception
   def index
-    @requests = current_user.requests.includes(:sender)
+    @pagy, @requests = pagy(:countless, current_user.requests.includes(:sender).order(created_at: :desc, id: :desc), limit: 15)
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def sent_requests
-    @sent_requests = current_user.sent_requests.includes(:user)
+    @pagy, @sent_requests = pagy(:countless, current_user.sent_requests.includes(:user).order(created_at: :desc, id: :desc), limit: 15)
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
   # CHECK WHO CURRENT USER IS, IF SENDER OR RECEIVER AND BROADCAST ACCORDINGLY
   def destroy

@@ -1,11 +1,21 @@
 class FollowshipsController < ApplicationController
+  include Pagy::Method
+  # MIGHT REQUIRE TESTING PAGY
   protect_from_forgery with: :exception
   def index
-    @follows = current_user.followings.eager_load(:followed, :follow_request_by_current)
+    @pagy, @follows = pagy(:countless, current_user.followings.eager_load(:followed, :follow_request_by_current).order(id: :desc), limit: 15)
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def followers
-    @followers = current_user.followers.eager_load(:followed, :follow_request_by_current)
+    @pagy, @followers = pagy(:countless, current_user.followers.eager_load(:followed, :follow_request_by_current).order(id: :desc), limit: 15)
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
   def destroy
     this_params = destroy_params

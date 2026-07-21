@@ -1,0 +1,9 @@
+<%= turbo_stream.append "followers-#{current_user.id}" do %>
+  <%= render partial: "users/user", collection: @followers, locals: {custom_start: "followers-user-"} %>
+<% end %>
+
+<% if @pagy.next.present? %>
+  <%= turbo_stream.replace :next_page do %>
+    <%= turbo_frame_tag :next_page, src: followships_followers_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+  <% end %>
+<% end %>

@@ -7,3 +7,6 @@
         <div>No sent requests yet!</div>
     <% end %>
 </div>
+<% if @pagy.next.present? %>
+    <%= turbo_frame_tag :next_page, src: requests_sent_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+<% end %>

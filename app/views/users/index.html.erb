@@ -1,3 +1,12 @@
+<%# ONLY MISSING FORM TO SEARCH NOW - SEARCH ON  EVERY INPUT BUT ONLY 1 SEC AFTER NO TYPING OR SOMETHING - DONT SEARCH WITH FORM IF ITS EMPTY %>
+<%= form_with url: users_path, method: :get, 
+              data: { controller: "searchbar", turbo_stream: true } do |form| %>
+  <div>
+    <%= form.text_field :search,
+                        value: @search_params,
+                        data: { action: "input->searchbar#submit" } %>
+  </div>
+<% end %>
 <div id="users-index">
     <%= render @users %>
 </div>

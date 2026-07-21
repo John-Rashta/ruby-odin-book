@@ -26,7 +26,7 @@ class CommentsController < ApplicationController
       if !@comment
         format.turbo_stream { render :failed_find, locals: { comment_id: params[:id] }, status: :unprocessable_entity }
       else
-        @pagy, @comments = pagy(:countless, @comment.comments.eager_load(:creator, liked: :user), limit: 5)
+        @pagy, @comments = pagy(:countless, @comment.comments.eager_load(:creator, liked: :user).order(created_at: :asc), limit: 5)
         format.turbo_stream
       end
     end

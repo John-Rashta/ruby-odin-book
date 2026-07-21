@@ -1,0 +1,9 @@
+<%= turbo_stream.append "sent-requests" do %>
+  <<%= render partial: "request", collection: @sent_requests %>
+<% end %>
+
+<% if @pagy.next.present? %>
+  <%= turbo_stream.replace :next_page do %>
+    <%= turbo_frame_tag :next_page, src: requests_sent_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+  <% end %>
+<% end %>

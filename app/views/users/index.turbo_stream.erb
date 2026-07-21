@@ -1,9 +1,15 @@
-<%= turbo_stream.append "users-index" do %>
-  <%= render @users %>
+<% if @pagy.page == 1%>
+  <%= turbo_stream.update "users-index" do %>
+    <%= render @users %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.append "users-index" do %>
+    <%= render @users %>
+  <% end %>
 <% end %>
 
 <% if @pagy.next.present? %>
   <%= turbo_stream.replace :next_page do %>
-    <%= turbo_frame_tag :next_page, src: users_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+    <%= turbo_frame_tag :next_page, src: users_path(page: @pagy.next, search: @search_params, format: :turbo_stream), loading: :lazy %>
   <% end %>
 <% end %>

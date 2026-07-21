@@ -2,3 +2,6 @@
 <div id="followers-<%= current_user.id %>">
     <%= render partial: "users/user", collection: @followers, locals: {custom_start: "followers-user-"} %>
 </div>
+<% if @pagy.next.present? %>
+    <%= turbo_frame_tag :next_page, src: followships_followers_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+<% end %>

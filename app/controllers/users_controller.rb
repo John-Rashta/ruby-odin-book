@@ -3,8 +3,12 @@ class UsersController < ApplicationController
   protect_from_forgery with: :exception
   before_action :validate_image, only: %i[ change_avatar ]
   def index
-    @pagy, @users = pagy(:countless,  User.eager_load(:followed, :follow_request_by_current).where.not(id: current_user.id).all, limit: 15)
+    @search_params = params.has_key?(:search) && params[:search].strip() || ""
+    @pagy, @users = pagy(:countless,
+      User.eager_load(:followed, :follow_request_by_current).where("username ILIKE ?", "%#{User.sanitize_sql_like(@search_params)}%").where.not(id: current_user.id).order(id: :desc),
+      limit: 15)
 
+    p @users
     respond_to do |format|
       format.html
       format.turbo_stream
