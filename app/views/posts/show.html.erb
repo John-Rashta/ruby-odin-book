@@ -1,4 +1,5 @@
 <%= turbo_stream_from "post-show-#{@post.id}" %>
+<%= link_to "Back", "javascript:history.back()" %>
 <%= render @post, class: "show-element" %>
 <%= form_with model: Comment.new, url: post_comments_path(@post.id), data: { controller: :form, action: "turbo:submit-end->form#clear" } do |form| %>
     <%= form.textarea :content, size: "5x5", data: {

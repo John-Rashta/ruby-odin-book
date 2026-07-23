@@ -1,5 +1,6 @@
 <%= turbo_stream_from "posts-#{@user.id}" %>
-<%= render @user %>
+<%= link_to "Back", "javascript:history.back()" %>
+<%= render @user, class: "show-element" %>
 <div id="posts-<%= @user.id %>">
     <%= render partial: "posts/post", collection: @posts %>
 </div>

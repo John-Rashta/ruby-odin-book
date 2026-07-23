@@ -8,7 +8,6 @@ class UsersController < ApplicationController
       User.eager_load(:followed, :follow_request_by_current).where("username ILIKE ?", "%#{User.sanitize_sql_like(@search_params)}%").where.not(id: current_user.id).order(id: :desc),
       limit: 15)
 
-    p @users
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -36,10 +35,15 @@ class UsersController < ApplicationController
     if current_user.save
       File.delete("tmp/#{current_user.id}.png")
       flash[:notice]= "Sucessfully changed avatar!"
+      # MIGHT WANNA REDIRECT TO EDIT SO THAT PAGE GETS UPDATED AND IMAGE JUST MOVED TO IMAGE
+      redirect_to action: "edit_avatar"
     else
       flash[:alert] = "Failed to change avatar."
       head :bad_request
     end
+  end
+
+  def edit_avatar
   end
 
   private

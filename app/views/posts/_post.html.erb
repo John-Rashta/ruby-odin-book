@@ -31,8 +31,15 @@
             <button data-action="click->edit-visibility#show">Edit</button>
         </div>
         <% end %>
-        <div> <%= post.creator.username %> </div>
-        <%= link_to post_path(post.id), class: "content-link #{local_assigns[:class] && local_assigns[:class] == "show-element" ? "content-link-disabled" : ""}", 
+        <%= link_to user_path(post.creator.id), class: "content-link",
+        data: { turbo_frame: "_top" } do %>
+            <img src="<%= post.creator.avatar_url %>" alt="">
+        <% end %>
+        <%= link_to user_path(post.creator.id), class: "content-link",
+        data: { turbo_frame: "_top" } do %>
+            <div class="content-link-user-name"> <%= post.creator.username %> </div>
+        <% end %>
+        <%= link_to post_path(post.id), class: "content-link #{local_assigns[:class] && local_assigns[:class].include?("show-element") ? "content-link-disabled" : ""}", 
         data: { turbo_frame: "_top" } do %>
             <div id="post-content-<%= post.id %>" class="content-container">
                 <% if post.postable_type == "PostImage" %>

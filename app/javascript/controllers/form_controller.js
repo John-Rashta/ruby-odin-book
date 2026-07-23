@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "field", "submit" ]
+  static targets = [ "field", "submit", "fieldClear" ]
 
   connect() {
     this.disableIfEmptyFields();
@@ -9,6 +9,15 @@ export default class extends Controller {
 
   clear() {
     this.element.reset();
+    this.disableIfEmptyFields();
+  }
+
+  clearFields() {
+    this.fieldClearTargets.forEach((element) => {
+      element.value = ""
+    });
+
+    this.disableIfEmptyFields();
   }
 
   disableIfEmptyFields() {

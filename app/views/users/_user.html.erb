@@ -1,5 +1,11 @@
 <div id="<%= local_assigns[:custom_start] ? local_assigns[:custom_start] : "user-" %><%= user.id %>">
-    <img src="<%= user.avatar_url %>" alt="">
-    <div> <%= user.username %> </div>
+    <%= link_to user_path(user.id), class: "content-link #{local_assigns[:class] && local_assigns[:class].include?("show-element") ? "content-link-disabled" : ""}",
+    data: { turbo_frame: "_top" } do %>
+        <img src="<%= user.avatar.attached? ? url_for(user.avatar) : user.avatar_url %>" alt="">
+    <% end %>
+    <%= link_to user_path(user.id), class: "content-link #{local_assigns[:class] && local_assigns[:class].include?("show-element") ? "content-link-disabled" : ""}",
+    data: { turbo_frame: "_top" } do %>
+        <div class="content-link-user-name <%= local_assigns[:class] && local_assigns[:class].include?("show-element") ? "content-link-disabled" : "" %>"> <%= user.username %> </div>
+    <% end %>
     <%= render partial: "users/form", locals: { user: user, current_user: current_user } %>
 </div>

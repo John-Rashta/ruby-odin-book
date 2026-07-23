@@ -22,3 +22,7 @@ main {
 .content-link-disabled:active {
     pointer-events: none;
 }
+
+.content-link-user-name:not(.content-link-disabled):hover {
+    text-decoration: underline;
+}
