@@ -1,11 +1,8 @@
 <%# SENT REQUESTS DONT GET ADDED BY WEBSOCKET - IF 2 PAGES OPEN THE SECOND WONT GET THE REQUEST %>
 <%# MIGHT ADD A BROADCAST JOB JUST FOR THIS AND ADD THE USER ID TO THE DIV ID %>
-<div id="sent-requests">
-    <% unless @sent_requests.empty? %>
-        <%= render partial: "request", collection: @sent_requests %>
-    <% else %>
-        <div>No sent requests yet!</div>
-    <% end %>
+<%= turbo_stream_from "sent-requests-#{current_user.id}" %>
+<div id="sent-requests-<%= current_user.id %>">
+    <%= render partial: "request", collection: @sent_requests %>
 </div>
 <% if @pagy.next.present? %>
     <%= turbo_frame_tag :next_page, src: requests_sent_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>

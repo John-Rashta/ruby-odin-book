@@ -1,4 +1,4 @@
-<%= turbo_stream.append "sent-requests" do %>
+<%= turbo_stream.append "sent-requests-#{current_user.id}" do %>
   <<%= render partial: "request", collection: @sent_requests %>
 <% end %>
 

@@ -6,16 +6,23 @@ class Request < ApplicationRecord
   validates :user_id, :sender_id, :table_type, presence: true
   validates :table_type, inclusion: { in: %w[follow] }
   validates :user_id, :sender_id, numericality: { only_integer: true }
-  after_create_commit :broadcast_to_receiver
+  after_create_commit :broadcast_creation
 
   private
 
-  def broadcast_to_receiver
+  def broadcast_creation
     broadcast_append_to(
       "requests-#{self.user_id}",
       target: "requests-#{self.user_id}",
       partial: "requests/request",
       locals: { request: self, current_user: self.user }
+    )
+
+    broadcast_append_to(
+      "sent-requests-#{self.sender_id}",
+      target: "sent-requests-#{self.sender_id}",
+      partial: "requests/request",
+      locals: { request: self, current_user: self.sender }
     )
   end
 end

@@ -31,7 +31,7 @@
             <% end %>
             <%= link_to user_path(comment.creator.id), class: "content-link",
             data: { turbo_frame: "_top" } do %>
-                <img src="<%= comment.creator.avatar_url %>" alt="">
+                <img src="<%= comment.creator.avatar.attached? ? url_for(comment.creator.avatar) : comment.creator.avatar_url %>" alt="">
             <% end %>
             <%= link_to user_path(comment.creator.id), class: "content-link",
             data: { turbo_frame: "_top" } do %>

@@ -33,7 +33,7 @@
         <% end %>
         <%= link_to user_path(post.creator.id), class: "content-link",
         data: { turbo_frame: "_top" } do %>
-            <img src="<%= post.creator.avatar_url %>" alt="">
+            <img src="<%= post.creator.avatar.attached? ? url_for(post.creator.avatar) : post.creator.avatar_url %>" alt="">
         <% end %>
         <%= link_to user_path(post.creator.id), class: "content-link",
         data: { turbo_frame: "_top" } do %>
