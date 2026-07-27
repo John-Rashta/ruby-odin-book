@@ -13,7 +13,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   test "Successfull Comment on Another Comment" do
     sign_in users(:one)
     assert_difference("Comment.count", 1) do
-      post comment_comments_url(comments(:one).id), params: { comment: { content: "hello" } }
+      post comment_comments_path(comments(:one).id), params: { comment: { content: "byeye" } }
     end
     assert_response :success
   end

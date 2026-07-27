@@ -26,7 +26,7 @@ class FollowshipsController < ApplicationController
         format.turbo_stream
         format.html { head :ok }
       else
-        flash[:alert] = "Failed to unfollow!"
+        flash.now[:alert] = "Failed to unfollow!"
         format.html { head :bad_request }
         # REMOVE USER FROM FOLLOWSHIPS PAGE IF FAILED TO UNFOLLOW AND UPDATE FORM
         if other_user = User.find_by(id: this_params[:user_id])
@@ -54,8 +54,8 @@ class FollowshipsController < ApplicationController
           { action: "destroy", requestId: @request.id }
         )
       else
+        flash.now[:alert] = "Failed to accept follow!"
         @followship.destroy
-        flash[:alert] = "Failed to accept follow!"
         format.html { head :bad_request }
         # IF FAILED DELETE THE REQUEST FROM REQUESTS PAGE IF IT EXISTS
         format.turbo_stream { render turbo_stream: turbo_stream.remove("request-#{this_params[:id]}"), status: :unprocessable_entity }

@@ -1,1 +1,6 @@
+<%= turbo_stream.update "notice" do %>
+    <%= notice %>
+<% end %>
+<%= turbo_stream.update "alert" do %>
+<% end %>
 <%= turbo_stream.remove "post-#{@post.id}" %>

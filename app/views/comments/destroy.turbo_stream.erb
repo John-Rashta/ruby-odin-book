@@ -7,3 +7,8 @@
 <%= turbo_stream.update "comments-post-number-#{@comment.post_id}" do %>
     <%= @comment.post.comments_count %>
 <% end %>
+<%= turbo_stream.update "notice" do %>
+    <%= notice %>
+<% end %>
+<%= turbo_stream.update "alert" do %>
+<% end %>

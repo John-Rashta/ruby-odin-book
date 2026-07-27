@@ -31,7 +31,7 @@ class RequestsController < ApplicationController
           helpers.get_other_user_from_request(current_user, @request),
           { action: "destroy", requestId: @request.id })
       else
-        flash[:alert] = "Failed to delete request!"
+        flash.now[:alert] = "Failed to delete request!"
         format.html { head :bad_request }
         if other_user = User.find_by(id: this_params[:user_id])
           format.turbo_stream {
@@ -46,12 +46,12 @@ class RequestsController < ApplicationController
     this_params = create_params
     respond_to do |format|
       if this_params[:user_id].to_i == current_user.id
-        flash[:alert] = "Can't send request to yourself!"
+        flash.now[:alert] = "Can't send request to yourself!"
         format.html { head :bad_request }
       else
         @request = current_user.sent_requests.create_or_find_by(create_params)
         if @request.previously_new_record?
-          flash.now[:notice]= "Sucessfully sent request!"
+          flash.now[:notice] = "Sucessfully sent request!"
           format.turbo_stream
           format.html { head :ok }
           RequestsBroadcastJob.perform_later(
@@ -59,12 +59,13 @@ class RequestsController < ApplicationController
             helpers.get_other_user_from_request(current_user, @request),
           )
         else
-          flash[:alert] = "Failed to send request!"
+          flash.now[:alert] = "Failed to send request!"
           format.html { head :bad_request }
-          # USE CREATE_OR_FIND_BY AND IF NOTHING FOUND JUST DELETE ASWELL- THO MAYBE ALWAYS DELETE- WILL SEE
           if other_user = User.find_by(id: this_params[:user_id])
             format.turbo_stream {
-              render turbo_stream: turbo_stream.replace("user-follow-form-#{other_user.id}", partial: "users/form", locals: { current_user: current_user, user: other_user }), status: :unprocessable_entity
+              render turbo_stream: [
+                turbo_stream.replace("user-follow-form-#{other_user.id}", partial: "users/form", locals: { current_user: current_user, user: other_user })
+              ], status: :unprocessable_entity
             }
           end
         end

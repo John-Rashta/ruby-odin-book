@@ -34,16 +34,18 @@ class UsersController < ApplicationController
     current_user.avatar.attach(io: File.open("tmp/#{current_user.id}.png"), filename: "#{current_user.id}.png", content_type: "image/png")
     if current_user.save
       File.delete("tmp/#{current_user.id}.png")
-      flash[:notice]= "Sucessfully changed avatar!"
-      # MIGHT WANNA REDIRECT TO EDIT SO THAT PAGE GETS UPDATED AND IMAGE JUST MOVED TO IMAGE
-      redirect_to action: "edit_avatar"
+      redirect_to avatar_path, notice: "Sucessfully changed avatar!", status: :see_other
     else
-      flash[:alert] = "Failed to change avatar."
+      flash.now[:alert] = "Failed to change avatar."
       head :bad_request
     end
   end
 
   def edit_avatar
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   private
@@ -53,7 +55,7 @@ class UsersController < ApplicationController
 
   def validate_image
     unless helpers.validate_image?(user_params[:avatar])
-      flash[:alert] = "Incorrect image type or image size."
+      flash.now[:alert] = "Incorrect image type or image size."
       head 400
     end
   end

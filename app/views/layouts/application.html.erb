@@ -27,8 +27,8 @@
   </head>
 
   <body class="flex flex-col">
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <p id="notice" class="notice"><%= flash[:notice] %></p>
+    <p id="alert" class="alert"><%= flash[:alert] %></p>
     <%= render "application/header" %>
     <%= yield %>
     <%= render "application/footer" %>

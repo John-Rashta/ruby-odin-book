@@ -1,6 +1,7 @@
 <%# SENT REQUESTS DONT GET ADDED BY WEBSOCKET - IF 2 PAGES OPEN THE SECOND WONT GET THE REQUEST %>
 <%# MIGHT ADD A BROADCAST JOB JUST FOR THIS AND ADD THE USER ID TO THE DIV ID %>
 <%= turbo_stream_from "sent-requests-#{current_user.id}" %>
+<%= link_to "Requests", requests_path %>
 <div id="sent-requests-<%= current_user.id %>">
     <%= render partial: "request", collection: @sent_requests %>
 </div>

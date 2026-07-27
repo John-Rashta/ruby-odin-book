@@ -1,4 +1,5 @@
 <%= turbo_stream_from "followers-#{current_user.id}" %>
+<%= link_to "Followships", followships_path %>
 <div id="followers-<%= current_user.id %>">
     <%= render partial: "users/user", collection: @followers, locals: {custom_start: "followers-user-"} %>
 </div>

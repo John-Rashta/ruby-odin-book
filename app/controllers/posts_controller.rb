@@ -29,12 +29,12 @@ class PostsController < ApplicationController
     @post = current_user.created_posts.build(postable: ContentCreation.new.create_content(post_params))
     respond_to do |format|
       if @post.postable.valid? && @post.save && @post.postable.save
-        flash[:notice] = "Sucessfully created post!"
+        flash.now[:notice] = "Sucessfully created post!"
         format.turbo_stream
         format.html { head :ok }
         PostCreationJob.perform_later(@post)
       else
-        flash[:alert] = "Failed to create post!"
+        flash.now[:alert] = "Failed to create post!"
         format.html { head :bad_request }
       end
     end
@@ -43,11 +43,11 @@ class PostsController < ApplicationController
   def destroy
     respond_to do |format|
       if @post.destroy
-        flash[:notice] = "Sucessfully deleted post!"
+        flash.now[:notice] = "Sucessfully deleted post!"
         format.turbo_stream
         format.html { head :ok }
       else
-        flash[:alert] = "Failed to delete post!"
+        flash.now[:alert] = "Failed to delete post!"
         format.html { head :bad_request }
         format.turbo_stream { render :failed_destroy, locals: { post_id: params[:id] }, status: :unprocessable_entity }
       end
@@ -59,12 +59,12 @@ class PostsController < ApplicationController
     ContentCreation.new.update_or_replace_content(@post, post_params)
     respond_to do |format|
       if @post.save && @post.postable.save
-        flash[:notice] = "Sucessfully updated post!"
+        flash.now[:notice] = "Sucessfully updated post!"
         format.turbo_stream
         format.html { head :ok }
         PostUpdateJob.perform_later(@post.id, "content", @post)
       else
-        flash[:alert] = "Failed to update post!"
+        flash.now[:alert] = "Failed to update post!"
         format.html { head :bad_request }
       end
     end
@@ -94,7 +94,8 @@ class PostsController < ApplicationController
     params = post_params
     validation = helpers.validate_params(params)
     unless validation[:valid]
-      flash[:alert] = validation[:message]
+      # MAYBE TURBO STREAM RESPONSE ADD TO ALERTS THE VALIDATION ERROR
+      flash.now[:alert] = validation[:message]
       head 400
     end
   end

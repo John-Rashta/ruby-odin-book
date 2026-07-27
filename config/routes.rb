@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   get "/followships/followers", to: "followships#followers"
   get "/requests/sent", to: "requests#sent_requests"
   get "/avatar", to: "users#edit_avatar"
-  put "/avatar", to: "users#change_avatar"
+  put "/avatar", to: "users#change_avatar", as: :change_avatar
   get "/comment/:id/comments", to: "comments#comments_part", as: :comment_comments_part
   get "/user/:id/follow_request/refresh", to: "users#follow_request", as: :user_follow_request
   delete :followships, to: "followships#destroy"

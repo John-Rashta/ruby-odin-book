@@ -41,11 +41,12 @@ class CommentsController < ApplicationController
       end
 
     @comment = current_user.created_comments.build(create_params)
-    respond_to do |format|
       if @comment.save
-        flash[:notice] = "Sucessfully created Comment"
-        format.turbo_stream
-        format.html { head :ok }
+        flash.now[:notice] = "Sucessfully created Comment"
+        respond_to do |format|
+          format.turbo_stream
+          format.html { head :ok }
+        end
         PostUpdateJob.perform_later(@comment.post_id, "comments_count", @comment.post.comments_count)
         if @comment.comment
           CommentUpdateJob.perform_later(@comment.comment_id, "comments_count", @comment.comment.comments_count)
@@ -56,17 +57,18 @@ class CommentsController < ApplicationController
         end
         CommentCreationJob.perform_later(@comment, get_depth_params_or_default)
       else
-        flash[:alert] = "Failed to create Comment"
-        format.html { head :bad_request }
+        flash.now[:alert] = "Failed to create Comment"
+        respond_to do |format|
+          format.html { head :bad_request }
+        end
       end
-    end
   end
 
   def destroy
     @comment = current_user.created_comments.includes(:post, :comment, :creator).find_by(id: params[:id])
     respond_to do |format|
       if @comment && @comment.destroy
-        flash[:notice] = "Sucessfully deleted comment!"
+        flash.now[:notice] = "Sucessfully deleted comment!"
         format.turbo_stream
         format.html { head :ok }
         PostUpdateJob.perform_later(@comment.post_id, "comments_count", @comment.post.comments_count)
@@ -77,7 +79,7 @@ class CommentsController < ApplicationController
           end
         end
       else
-        flash[:alert] = "Failed to delete comment!"
+        flash.now[:alert] = "Failed to delete comment!"
         format.html { head :bad_request }
         format.turbo_stream { render :failed_find, locals: { comment_id: params[:id] }, status: :unprocessable_entity }
       end
@@ -87,12 +89,12 @@ class CommentsController < ApplicationController
   def update
     respond_to do |format|
       if @comment.update(comment_params)
-        flash[:notice] = "Sucessfully updated comment!"
+        flash.now[:notice] = "Sucessfully updated comment!"
         format.turbo_stream
         format.html { head :ok }
         CommentUpdateJob.perform_later(@comment.id, "content", @comment.content)
       else
-        flash[:alert] = "Failed to update comment!"
+        flash.now[:alert] = "Failed to update comment!"
         format.html { head :bad_request }
       end
     end
