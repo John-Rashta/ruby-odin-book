@@ -37,6 +37,8 @@ class RequestsController < ApplicationController
           format.turbo_stream {
             render :request_failure, locals: { current_user: current_user, user: other_user, request_id: params[:id] }, status: :unprocessable_entity
           }
+        else
+          format.turbo_stream { head :bad_request }
         end
       end
     end
@@ -67,6 +69,8 @@ class RequestsController < ApplicationController
                 turbo_stream.replace("user-follow-form-#{other_user.id}", partial: "users/form", locals: { current_user: current_user, user: other_user })
               ], status: :unprocessable_entity
             }
+          else
+            format.turbo_stream { head :bad_request }
           end
         end
       end

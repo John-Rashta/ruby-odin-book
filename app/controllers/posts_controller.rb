@@ -36,6 +36,7 @@ class PostsController < ApplicationController
       else
         flash.now[:alert] = "Failed to create post!"
         format.html { head :bad_request }
+        format.turbo_stream { head :bad_request }
       end
     end
   end
@@ -66,6 +67,7 @@ class PostsController < ApplicationController
       else
         flash.now[:alert] = "Failed to update post!"
         format.html { head :bad_request }
+        format.turbo_stream { head :bad_request }
       end
     end
   end
@@ -95,8 +97,11 @@ class PostsController < ApplicationController
     validation = helpers.validate_params(params)
     unless validation[:valid]
       # MAYBE TURBO STREAM RESPONSE ADD TO ALERTS THE VALIDATION ERROR
-      flash.now[:alert] = validation[:message]
-      head 400
+      respond_to do |format|
+        flash.now[:alert] = validation[:message]
+        format.html { head :bad_request }
+        format.turbo_stream { head :bad_request }
+      end
     end
   end
 end

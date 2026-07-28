@@ -37,7 +37,10 @@ class UsersController < ApplicationController
       redirect_to avatar_path, notice: "Sucessfully changed avatar!", status: :see_other
     else
       flash.now[:alert] = "Failed to change avatar."
-      head :bad_request
+      respond_to do |format|
+        format.html { head :bad_request }
+        format.turbo_stream { head :bad_request }
+      end
     end
   end
 
@@ -55,8 +58,11 @@ class UsersController < ApplicationController
 
   def validate_image
     unless helpers.validate_image?(user_params[:avatar])
-      flash.now[:alert] = "Incorrect image type or image size."
-      head 400
+      respond_to do |format|
+        flash.now[:alert] = "Incorrect image type or image size."
+        format.turbo_stream { head :bad_request }
+        format.html { head :bad_request }
+      end
     end
   end
 end

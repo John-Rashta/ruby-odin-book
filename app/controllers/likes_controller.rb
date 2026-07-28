@@ -14,11 +14,13 @@ class LikesController < ApplicationController
           CommentUpdateJob.perform_later(@like.contentable_id, "likes_count", @like.contentable.likes_count)
         end
       else
-        if content = params[:contentable_type].constantize.find_by(id: params[:contentable_id])
-          format.turbo_stream { render :update_form, locals: { type: params[:contentable_type].downcase, content_id: params[:contentable_id], content: content }, status: :unprocessable_entity }
-        end
         flash.now[:alert] = "Failed to Like!"
         format.html { head :bad_request }
+        if content = params[:contentable_type].constantize.find_by(id: params[:contentable_id])
+          format.turbo_stream { render :update_form, locals: { type: params[:contentable_type].downcase, content_id: params[:contentable_id], content: content }, status: :unprocessable_entity }
+        else
+          format.turbo_stream { head :bad_request }
+        end
       end
     end
   end
@@ -37,11 +39,13 @@ class LikesController < ApplicationController
           CommentUpdateJob.perform_later(@like.contentable_id, "likes_count", @like.contentable.likes_count)
         end
       else
-        if content = params[:contentable_type].constantize.find_by(id: params[:contentable_id])
-          format.turbo_stream { render :update_form, locals: { type: params[:contentable_type].downcase, content_id: params[:contentable_id], content: content }, status: :unprocessable_entity }
-        end
         flash.now[:alert] = "Failed to Unlike!"
         format.html { head :bad_request }
+        if content = params[:contentable_type].constantize.find_by(id: params[:contentable_id])
+          format.turbo_stream { render :update_form, locals: { type: params[:contentable_type].downcase, content_id: params[:contentable_id], content: content }, status: :unprocessable_entity }
+        else
+          format.turbo_stream { head :bad_request }
+        end
       end
     end
   end

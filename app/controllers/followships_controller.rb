@@ -33,6 +33,8 @@ class FollowshipsController < ApplicationController
           format.turbo_stream {
             render :followship_failure, locals: { current_user: current_user, user: other_user }, status: :unprocessable_entity
           }
+        else
+          format.turbo_stream { head :bad_request }
         end
       end
     end

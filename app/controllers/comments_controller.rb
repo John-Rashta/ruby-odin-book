@@ -60,6 +60,7 @@ class CommentsController < ApplicationController
         flash.now[:alert] = "Failed to create Comment"
         respond_to do |format|
           format.html { head :bad_request }
+          format.turbo_stream { head :bad_request }
         end
       end
   end
@@ -96,6 +97,7 @@ class CommentsController < ApplicationController
       else
         flash.now[:alert] = "Failed to update comment!"
         format.html { head :bad_request }
+        format.turbo_stream { head :bad_request }
       end
     end
   end

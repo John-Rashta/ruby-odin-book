@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_current_id, if: :user_signed_in?
+  after_action :append_flashes
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   rescue_from ArgumentError, with: :handle_argument_error
@@ -18,21 +19,46 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_argument_error
-    head :bad_request
-    flash[:alert] = "Something Went Wrong!"
+    respond_to do |format|
+      flash[:alert] = "Something Went Wrong!"
+      format.turbo_stream { head :bad_request }
+      format.html { head :bad_request }
+    end
   end
 
   def record_not_unique
-    flash[:alert] = "Invalid Values."
-    head :bad_request
+    respond_to do |format|
+      flash[:alert] = "Invalid Values."
+      format.turbo_stream { head :bad_request }
+      format.html { head :bad_request }
+    end
   end
 
   def record_not_found
-    flash[:alert] = "Record not found."
-    head :not_found
+    respond_to do |format|
+      flash[:alert] = "Record not found."
+      format.turbo_stream { head :not_found }
+      format.html { head :not_found }
+    end
   end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [ :email ])
+  end
+
+  private
+
+  def append_flashes
+    return unless response.media_type == "text/vnd.turbo-stream.html"
+
+    return if response.status.in?(300..399)
+
+    flash.each do |type, message|
+      stream_tag = helpers.turbo_stream.update("#{type}", html: message)
+
+      response.body = "#{response.body}#{stream_tag}"
+    end
+
+    flash.discard
   end
 end
