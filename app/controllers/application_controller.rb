@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_current_id, if: :user_signed_in?
-  after_action :append_flashes
+  around_action :append_flashes
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   rescue_from ArgumentError, with: :handle_argument_error
@@ -49,6 +49,8 @@ class ApplicationController < ActionController::Base
   private
 
   def append_flashes
+    yield
+
     return unless response.media_type == "text/vnd.turbo-stream.html"
 
     return if response.status.in?(300..399)

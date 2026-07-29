@@ -47,3 +47,22 @@ document.addEventListener("turbo:before-visit", function(event) {
     event.preventDefault();
   }
 });
+
+document.addEventListener("trix-file-accept", (event) => {
+  const acceptedTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+  const maxBytes = 5 * 1024 * 1024; // 5MB limit
+  const alertDiv = document.getElementById("alert");
+  
+  // Validate file type
+  if (!acceptedTypes.includes(event.file.type)) {
+    event.preventDefault();
+    alertDiv.textContent = "Only images (JPEG, PNG, JPG, WEBP) are allowed."
+    return;
+  }
+
+  // Validate file size
+  if (event.file.size > maxBytes) {
+    event.preventDefault();
+    alertDiv.textContent = "Maximum size is 5MB."
+  }
+});

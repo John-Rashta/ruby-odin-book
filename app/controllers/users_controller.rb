@@ -36,6 +36,7 @@ class UsersController < ApplicationController
       File.delete("tmp/#{current_user.id}.png")
       redirect_to avatar_path, notice: "Sucessfully changed avatar!", status: :see_other
     else
+      # CONSIDER REDIRECTING EVEN ON FAIL AND JUST SEND ALERT
       flash.now[:alert] = "Failed to change avatar."
       respond_to do |format|
         format.html { head :bad_request }

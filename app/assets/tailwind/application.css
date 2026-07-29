@@ -26,3 +26,13 @@ main {
 .content-link-user-name:not(.content-link-disabled):hover {
     text-decoration: underline;
 }
+
+.flash {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.flash.is-visible {
+  opacity: 1;
+}

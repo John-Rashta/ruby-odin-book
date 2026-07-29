@@ -50,7 +50,7 @@ class PostsController < ApplicationController
       else
         flash.now[:alert] = "Failed to delete post!"
         format.html { head :bad_request }
-        format.turbo_stream { render :failed_destroy, locals: { post_id: params[:id] }, status: :unprocessable_entity }
+        format.turbo_stream { render :failed_find, locals: { post_id: params[:id] }, status: :unprocessable_entity }
       end
     end
   end
