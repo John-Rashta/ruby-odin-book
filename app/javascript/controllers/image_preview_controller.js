@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
+// Preview loaded images in browser
 export default class extends Controller {
   static targets = ["canvas", "source"];
 

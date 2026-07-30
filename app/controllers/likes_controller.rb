@@ -16,7 +16,8 @@ class LikesController < ApplicationController
       else
         flash.now[:alert] = "Failed to Like!"
         format.html { head :bad_request }
-        if content = params[:contentable_type].constantize.find_by(id: params[:contentable_id])
+        # Tries to find if there is a Class(User, Post etc) for the type and if it contains a record with that id so that it updates the Like Form in browser
+        if content = params[:contentable_type].safe_constantize&.find_by(id: params[:contentable_id])
           format.turbo_stream { render :update_form, locals: { type: params[:contentable_type].downcase, content_id: params[:contentable_id], content: content }, status: :unprocessable_entity }
         else
           format.turbo_stream { head :bad_request }
@@ -41,7 +42,8 @@ class LikesController < ApplicationController
       else
         flash.now[:alert] = "Failed to Unlike!"
         format.html { head :bad_request }
-        if content = params[:contentable_type].constantize.find_by(id: params[:contentable_id])
+        # Tries to find if there is a Class(User, Post etc) for the type and if it contains a record with that id so that it updates the Like Form in browser
+        if content = params[:contentable_type].safe_constantize&.find_by(id: params[:contentable_id])
           format.turbo_stream { render :update_form, locals: { type: params[:contentable_type].downcase, content_id: params[:contentable_id], content: content }, status: :unprocessable_entity }
         else
           format.turbo_stream { head :bad_request }

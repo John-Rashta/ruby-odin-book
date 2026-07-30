@@ -1,6 +1,5 @@
 class RequestsController < ApplicationController
   include Pagy::Method
-  # MIGHT REQUIRE TESTING PAGY
   protect_from_forgery with: :exception
   def index
     @pagy, @requests = pagy(:countless, current_user.requests.includes(:sender).order(created_at: :desc, id: :desc), limit: 15)
@@ -17,7 +16,6 @@ class RequestsController < ApplicationController
       format.turbo_stream
     end
   end
-  # CHECK WHO CURRENT USER IS, IF SENDER OR RECEIVER AND BROADCAST ACCORDINGLY
   def destroy
     this_params = destroy_params
     @request = Request.where(id: params[:id]).and(Request.where(user_id: current_user.id).or(Request.where(sender_id: current_user.id))).first
@@ -33,6 +31,7 @@ class RequestsController < ApplicationController
       else
         flash.now[:alert] = "Failed to delete request!"
         format.html { head :bad_request }
+        # Remove request and update form if user exists
         if other_user = User.find_by(id: this_params[:user_id])
           format.turbo_stream {
             render :request_failure, locals: { current_user: current_user, user: other_user, request_id: params[:id] }, status: :unprocessable_entity
@@ -63,6 +62,7 @@ class RequestsController < ApplicationController
         else
           flash.now[:alert] = "Failed to send request!"
           format.html { head :bad_request }
+          # update form if user exists
           if other_user = User.find_by(id: this_params[:user_id])
             format.turbo_stream {
               render turbo_stream: [

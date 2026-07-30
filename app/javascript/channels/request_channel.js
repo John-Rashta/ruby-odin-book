@@ -15,6 +15,7 @@ consumer.subscriptions.create("RequestChannel", {
     this.removeRequest(data["action"], data["requestId"]);
   },
 
+  // remove request from browser if it exists
   removeRequest(action, requestId) {
     if (action === "destroy" && requestId) {
       const element = document.getElementById(`request-${requestId}`);
@@ -24,6 +25,7 @@ consumer.subscriptions.create("RequestChannel", {
     };
   },
 
+  // Force form to refetch to update - uses the follow request route
   addSrc(id) {
     const frame = document.getElementById(`user-follow-form-${id}`);
     if (frame) {

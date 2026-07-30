@@ -12,6 +12,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     super
+    # Send Welcome Email and add a gravatar url to the user as default icon
     if !resource.invalid?
       UserMailer.welcome_email(resource).deliver
       if !resource.avatar_url

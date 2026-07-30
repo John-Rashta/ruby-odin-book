@@ -1,5 +1,5 @@
 <%= turbo_stream.append "sent-requests-#{current_user.id}" do %>
-  <<%= render partial: "request", collection: @sent_requests %>
+  <%= render partial: "request", collection: @sent_requests %>
 <% end %>
 
 <% if @pagy.next.present? %>

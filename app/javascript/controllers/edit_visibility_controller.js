@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+// show and hide edit div
 export default class extends Controller {
     static targets = ["editDiv", "mainDiv"]
     show() {

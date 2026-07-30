@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+// show and hide comments bellow other comments
 export default class extends Controller {
     static targets = ["showButton", "hideButton", "commentSection", "commentMain", "commentsContainer"]
     show() {

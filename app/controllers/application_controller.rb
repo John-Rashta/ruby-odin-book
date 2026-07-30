@@ -48,6 +48,7 @@ class ApplicationController < ActionController::Base
 
   private
 
+  # Append flashes to every turbo_stream response since otherwise they won't be sent
   def append_flashes
     yield
 

@@ -8,8 +8,7 @@ import "channels"
 
 import { Turbo } from "@hotwired/turbo-rails"
 
-// CHANGE THIS TO WORK ON COMMENTS ASWELL- SHOULD BE ABLE TO TELL THE DIFFERENCE OR MORE INFO NEEDS TO BE PROVIDED
-// JUST SEND IF STRING "post" OR "comment" AND USE THAT TO GET EVERYTHING- CHANGE POST_ID TO JUST ID- DONT HARD CODE POST OR COMMENT- JUST INSERT THE FETCHED STRING
+// Updates count on comments and posts - uses provided type and id so it doesn't need to know what type it is
 Turbo.StreamActions.update_count = function() {
     const type = this.getAttribute("type");
     const id = this.getAttribute("id");
@@ -28,26 +27,31 @@ Turbo.StreamActions.update_count = function() {
     };
 };
 
+// Triggers redirect to homepage - used if in a show page of a post/comment that got deleted
 Turbo.StreamActions.redirect_to_home = function() {
     Turbo.visit("/");
 };
 
+// Adds class to element/s
 Turbo.StreamActions.add_class = function() {
   const className = this.getAttribute("class")
   this.targetElements.forEach(element => element.classList.add(className))
 };
 
+// Removes class on element/s
 Turbo.StreamActions.remove_class = function() {
   const className = this.getAttribute("class")
   this.targetElements.forEach(element => element.classList.remove(className))
 };
 
+// Prevent inbuilt links from trying to visit the page they are already in
 document.addEventListener("turbo:before-visit", function(event) {
   if (event.detail.url === window.location.href) {
     event.preventDefault();
   }
 });
 
+// Prevent trix from accept non-images or images over 5MB
 document.addEventListener("trix-file-accept", (event) => {
   const acceptedTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
   const maxBytes = 5 * 1024 * 1024; // 5MB limit

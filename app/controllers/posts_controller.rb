@@ -50,6 +50,7 @@ class PostsController < ApplicationController
       else
         flash.now[:alert] = "Failed to delete post!"
         format.html { head :bad_request }
+        # Remove post from page
         format.turbo_stream { render :failed_find, locals: { post_id: params[:id] }, status: :unprocessable_entity }
       end
     end
@@ -79,6 +80,7 @@ class PostsController < ApplicationController
     unless @post
       respond_to do |format|
         format.html { head :not_found }
+        # remove post from page
         format.turbo_stream { render :failed_find, locals: { post_id: params[:id] }, status: :unprocessable_entity }
       end
     end
@@ -92,11 +94,11 @@ class PostsController < ApplicationController
     end
   end
 
+  # validate params (image, content) and respond if it fails
   def validate_params
     params = post_params
     validation = helpers.validate_params(params)
     unless validation[:valid]
-      # MAYBE TURBO STREAM RESPONSE ADD TO ALERTS THE VALIDATION ERROR
       respond_to do |format|
         flash.now[:alert] = validation[:message]
         format.html { head :bad_request }

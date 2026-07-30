@@ -1,4 +1,5 @@
 module UsersHelper
+  # Creates avatar - makes it rounded and scaled to 300
   def create_avatar(avatar)
     image = Vips::Image.new_from_file avatar.path
       if image.width > 300 || image.height > 300
@@ -18,6 +19,7 @@ module UsersHelper
       { image: image, mask: mask }
   end
 
+  # Validate image to be correct type and max 5 MB
   def validate_image?(image)
     unless [ "jpg", "jpeg", "png", "webp" ].include?(image.original_filename.split(".")[-1]) && image.size <= 5.megabytes
       false

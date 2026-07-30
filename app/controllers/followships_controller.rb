@@ -1,6 +1,5 @@
 class FollowshipsController < ApplicationController
   include Pagy::Method
-  # MIGHT REQUIRE TESTING PAGY
   protect_from_forgery with: :exception
   def index
     @pagy, @follows = pagy(:countless, current_user.followings.eager_load(:followed, :follow_request_by_current).order(id: :desc), limit: 15)

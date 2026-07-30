@@ -2,6 +2,8 @@ class UsersController < ApplicationController
   include Pagy::Method
   protect_from_forgery with: :exception
   before_action :validate_image, only: %i[ change_avatar ]
+
+  # Users index page with search bar to search by name
   def index
     @search_params = params.has_key?(:search) && params[:search].strip() || ""
     @pagy, @users = pagy(:countless,
@@ -23,10 +25,12 @@ class UsersController < ApplicationController
     end
   end
 
+  # Route just for refreshing follow forms
   def follow_request
     @user = User.eager_load(:followed, :follow_request_by_current).find(params[:id])
   end
 
+  # Change image into an avatar and upload it (reduced to 300 and rounded)
   def change_avatar
     avatar_prep = helpers.create_avatar(user_params[:avatar])
     # use the alpha from the svg as the alpha for our image
@@ -36,7 +40,6 @@ class UsersController < ApplicationController
       File.delete("tmp/#{current_user.id}.png")
       redirect_to avatar_path, notice: "Sucessfully changed avatar!", status: :see_other
     else
-      # CONSIDER REDIRECTING EVEN ON FAIL AND JUST SEND ALERT
       flash.now[:alert] = "Failed to change avatar."
       respond_to do |format|
         format.html { head :bad_request }
@@ -57,6 +60,7 @@ class UsersController < ApplicationController
     params.expect(user: [ :avatar ])
   end
 
+  # Validate image and respond if it fails
   def validate_image
     unless helpers.validate_image?(user_params[:avatar])
       respond_to do |format|

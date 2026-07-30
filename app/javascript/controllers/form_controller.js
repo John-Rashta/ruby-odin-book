@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Disable form submit if all fields are empty - allow clearing all fields and/or some fields
 export default class extends Controller {
   static targets = [ "field", "submit", "fieldClear" ]
 

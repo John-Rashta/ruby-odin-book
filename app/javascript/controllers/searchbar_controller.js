@@ -8,16 +8,20 @@ export default class extends Controller {
   connect() {
     const input = this.element.querySelector('input[name="search"]');
     
+    // Setup previous length to be equal to initial input length
     this.previousSearchLength = input ? input.value.trim().length : 0;
   }
 
   submit(event) {
+    // Trim and get current length
     const searchValue = event.target.value.trim();
     const currentSearchLength = searchValue.length;
 
+    // If current length is bigger than 0 or if it's 0 and previous length is bigger than 0 proceed to send the request to search users
     if (currentSearchLength > 0 || (currentSearchLength === 0 && this.previousSearchLength > 0)) {
         const url = new URL(this.element.action);
       
+        // Remove search from url if it's empty
         if (searchValue.length > 0) {
             url.searchParams.set("search", searchValue);
         } else {
@@ -28,15 +32,6 @@ export default class extends Controller {
     };
 
     this.previousSearchLength = currentSearchLength;
-  }
-
-  preventEmpty(event) {
-    const input = this.element.querySelector('input[name="search"]');
-    const currentSearchLength = input ? input.value.trim().length : 0;
-
-    if (currentSearchLength === 0 && this.previousSearchLength === 0) {
-      event.preventDefault();
-    };
   }
 
   debounce(func, delay) {

@@ -3,9 +3,11 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
     flashTimeout = null
     connect() {
+        // Trigger on connect if it already comes with a flash
         if (this.element.innerHTML.trim() !== "") {
             this.flashContentChanged()
         }
+        // Create the observer to keep track of changes
         this.observer = new MutationObserver((mutationsList) => {
         for (const mutation of mutationsList) {
             if (mutation.type === "childList" && this.element.innerHTML.trim() !== "") {
@@ -28,6 +30,7 @@ export default class extends Controller {
     }
 
     flashContentChanged() {
+        // Add the class and set a timeout to fade away
         this.clearActiveTimeout()
 
         this.element.classList.add("is-visible")

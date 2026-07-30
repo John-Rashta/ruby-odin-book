@@ -1,10 +1,5 @@
 class CommentsController < ApplicationController
   include Pagy::Method
-  # MAYBE ALREADY INTRODUCE NOT HAVING POST AND CHECKING IF COMMENT ID IS PASSED? NOT SURE
-  # USE NESTING INSTEAD- EITHER DOUBLE NESTING ON SINGLE- COMMENTS NESTED IN POSTS IN COMMENTS OR SEPARATE-
-  # COMMENTS NESTED IN POSTS AND ALSO COMMENTS NESTED IN COMMENTS- DO IT SEPARATE- USE NAMESPACES OR SOMETHING
-  # PROBABLY CHANGE NAMES CAUSE COMMENTS/ID/COMMENTS LOOKS BAD
-  # CHECK IF COMMENT ID IS PRESENT AND GRAB THAT AND ITS ID AND POSTID OTHERWISE BUILD DIRECT COMMENT TO POST ID
   before_action :set_own_comment_or_return, only: %i[ update ]
   protect_from_forgery with: :exception
 
@@ -82,6 +77,7 @@ class CommentsController < ApplicationController
       else
         flash.now[:alert] = "Failed to delete comment!"
         format.html { head :bad_request }
+        # Remove comment from page
         format.turbo_stream { render :failed_find, locals: { comment_id: params[:id] }, status: :unprocessable_entity }
       end
     end
@@ -104,6 +100,7 @@ class CommentsController < ApplicationController
 
   private
 
+  # Depth needed for comments section to know when to show link to comment instead of loading it's children comments
   def get_depth_params_or_default
     if params.include?(:depth) && params[:depth].to_i.between?(1, 10)
       params[:depth].to_i
