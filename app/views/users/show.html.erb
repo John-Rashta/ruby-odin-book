@@ -1,9 +1,11 @@
-<%= turbo_stream_from "posts-#{@user.id}" %>
-<%= link_to "Back", "javascript:history.back()" %>
-<%= render @user, class: "show-element" %>
-<div id="posts-<%= @user.id %>">
-    <%= render partial: "posts/post", collection: @posts %>
-</div>
-<% if @pagy.next.present? %>
-    <%= turbo_frame_tag :next_page, src: user_path(@user.id, page: @pagy.next, format: :turbo_stream), loading: :lazy %>
-<% end %>
+<main>
+    <%= turbo_stream_from "posts-#{@user.id}" %>
+    <%= link_to "Back", "javascript:history.back()" %>
+    <%= render @user, class: "show-element" %>
+    <div id="posts-<%= @user.id %>">
+        <%= render partial: "posts/post", collection: @posts %>
+    </div>
+    <% if @pagy.next.present? %>
+        <%= turbo_frame_tag :next_page, src: user_path(@user.id, page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+    <% end %>
+</main>

@@ -1,3 +1,4 @@
+# Methods to create/update/replace post content which is either rich text or an attachment
 class ContentCreation
   def create_content(params)
     if params.has_key?(:image)

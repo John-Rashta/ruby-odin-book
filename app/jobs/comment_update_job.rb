@@ -3,7 +3,6 @@ class CommentUpdateJob < ApplicationJob
 
   # (comment_id, data_type("likes_count", "comments_count", "content"), data(count, comment content))
   def perform(comment_id, data_type, data)
-    # Do something later
     if data_type == "content"
       Turbo::StreamsChannel.broadcast_update_to(
         "comment-#{comment_id}",

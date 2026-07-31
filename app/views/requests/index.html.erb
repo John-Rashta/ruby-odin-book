@@ -1,8 +1,10 @@
-<%= turbo_stream_from "requests-#{current_user.id}" %>
-<%= link_to "Sent Requests", requests_sent_path %>
-<div id="requests-<%= current_user.id %>">
-    <%= render @requests%>
-</div>
-<% if @pagy.next.present? %>
-    <%= turbo_frame_tag :next_page, src: requests_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
-<% end %>
+<main>
+    <%= turbo_stream_from "requests-#{current_user.id}" %>
+    <%= link_to "Sent Requests", requests_sent_path %>
+    <div id="requests-<%= current_user.id %>">
+        <%= render @requests%>
+    </div>
+    <% if @pagy.next.present? %>
+        <%= turbo_frame_tag :next_page, src: requests_path(page: @pagy.next, format: :turbo_stream), loading: :lazy %>
+    <% end %>
+</main>

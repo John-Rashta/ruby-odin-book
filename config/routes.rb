@@ -16,7 +16,9 @@ Rails.application.routes.draw do
   get "/requests/sent", to: "requests#sent_requests"
   get "/avatar", to: "users#edit_avatar"
   put "/avatar", to: "users#change_avatar", as: :change_avatar
+  # For comments bellow comments in a comment section
   get "/comment/:id/comments", to: "comments#comments_part", as: :comment_comments_part
+  # For refreshing follow form
   get "/user/:id/follow_request/refresh", to: "users#follow_request", as: :user_follow_request
   delete :followships, to: "followships#destroy"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

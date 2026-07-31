@@ -14,6 +14,12 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "Get Edit Avatar" do
+    sign_in users(:one)
+    get avatar_url
+    assert_response :success
+  end
+
   test "Show View" do
     sign_in users(:three)
     get user_url(users(:one).id)

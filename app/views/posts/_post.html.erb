@@ -19,6 +19,7 @@
         <% end %>
     </div>
     <div data-edit-visibility-target="mainDiv" id="main-content-post-<%= post.id %>">
+        <%# Options are added if it's a new post (they are sent hidden and it gets removed on frontend if he is the creator) or if the current user is the creator %>
         <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
         <div class="<%= local_assigns[:just_created] ? "hidden" : "" %>" <%= tag.attributes(
             data: ({

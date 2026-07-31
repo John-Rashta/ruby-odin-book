@@ -3,7 +3,6 @@ class PostUpdateJob < ApplicationJob
 
   # (post_id, data_type("likes_count", "comments_count", "content"), data(count, post record))
   def perform(post_id, data_type, data)
-    # Do something later
     if data_type == "content"
       Turbo::StreamsChannel.broadcast_update_to(
         "post-#{post_id}",

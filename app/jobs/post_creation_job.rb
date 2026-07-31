@@ -1,9 +1,8 @@
 class PostCreationJob < ApplicationJob
   queue_as :default
 
+  # Broadcast to followers and anyone on creator's user page
   def perform(post)
-    # BROADCAST TO FOLLOWERS AND ANYONE ON HIS USER PAGE
-
     followers_ids = post.creator.followers.pluck(:id)
 
     post_html = ApplicationController.render(

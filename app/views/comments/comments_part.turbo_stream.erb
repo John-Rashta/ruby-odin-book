@@ -1,4 +1,5 @@
 <% if @comment.comments_count > 0 %>
+<%# First means first time loading pre-existing comments on another comment %>
     <% if @first == "true" %>
         <%= turbo_stream.update "comment-comments-#{@comment.id}" do %>
             <%= render partial: "comments/comment", collection: @comments, locals: { depth: @depth } %>
@@ -21,6 +22,7 @@
         <% end %>
     <% end %>
 <% else %>
+        <%# If no comments reset it all %>
         <%= turbo_stream.update "comment-comments-#{@comment.id}" do %>
         <% end %>
         <%= turbo_stream.update "load-more-#{@comment.id}" do %>

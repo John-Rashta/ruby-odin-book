@@ -8,18 +8,9 @@ class Post < ApplicationRecord
   has_many :direct_comments, -> { where(comment_id: nil).order(created_at: :desc) }, foreign_key: "post_id", class_name: "Comment", dependent: :destroy
   validates :creator_id, numericality: { only_integer: true }
   belongs_to :postable, polymorphic: true, dependent: :destroy
-  # after_create_commit :add_post
-  # after_update_commit :update_post
   after_destroy_commit :delete_post
 
   private
-
-  def add_post
-    PostCreationJob.perform_later(self)
-  end
-
-  def update_post
-  end
 
   def delete_post
     broadcast_remove_to(

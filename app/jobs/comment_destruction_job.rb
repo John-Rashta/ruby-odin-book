@@ -1,7 +1,7 @@
 class CommentDestructionJob < ApplicationJob
   queue_as :default
 
-  # ONLY CALL THIS IF COMMENT IS LAST COMMENT ON THAT COMMENT
+  # Only called when the comment is the last comment on another comment - hides the div container and sets it up
   def perform(parent_comment_id)
     Turbo::StreamsChannel.broadcast_action_to(
       "comment-#{parent_comment_id}",

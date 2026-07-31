@@ -1,5 +1,5 @@
-<%= turbo_stream_from "feed-#{current_user.id}" %>
 <main>
+    <%= turbo_stream_from "feed-#{current_user.id}" %>
     <%= form_with model: Post.new, data: { controller: "form", action: "turbo:submit-end->form#clear" } do |form| %>
         <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
             form_target: "field fieldClear",

@@ -1,4 +1,5 @@
 class ImageValidator < ActiveModel::Validator
+  # Validates image size and type
   def validate(record)
     image = record.send(options[:custom_type])
     if image.attached?

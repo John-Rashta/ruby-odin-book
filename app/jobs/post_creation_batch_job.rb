@@ -1,6 +1,7 @@
 class PostCreationBatchJob < ApplicationJob
   queue_as :default
 
+  # Batch broadcast to feeds of followers
   def perform(followers_ids, html)
     follower_ids.each do |follower_id|
       stream_name = "feed-#{follower_id}"
