@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class LikesTest < ApplicationSystemTestCase
+class FollowshipsTest < ApplicationSystemTestCase
   include Devise::Test::IntegrationHelpers
   test "visiting index" do
     sign_in users(:three)
@@ -11,6 +11,6 @@ class LikesTest < ApplicationSystemTestCase
 
     click_button "Stop Following"
 
-    assert_selector("button", minimum: 1, maximum: 1)
+    assert_no_selector "div", text: "Stop Following"
   end
 end

@@ -6,6 +6,11 @@ CHROMEDRIVER_URL = "http://#{WINDOWS_HOST}:9515/"
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # driven_by :selenium, using: :headless_chrome, screen_size: [ 1400, 1400 ]
   driven_by :selenium_remote_chrome
+  include Warden::Test::Helpers
+  include Turbo::SystemTestHelper
+
+  self.use_transactional_tests = true
+
   Capybara.register_driver :selenium_remote_chrome do |app|
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument("--start-maximized")

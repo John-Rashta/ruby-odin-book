@@ -7,21 +7,21 @@
 one: 
   username: David
   email: david@rails
-  encrypted_password: 12345
+  encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
 # column: value
 #
 two: 
   username: John
   email: john@rails
-  encrypted_password: 56789
+  encrypted_password: <%= Devise::Encryptor.digest(User, '56789') %>
 # column: value
 
 three:
   username: Sarah
   email: sarah@rails
-  encrypted_password: ABCDE
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'ABCDE') %>
 
 four:
   username: Jenny
   email: jenny@rails
-  encrypted_password: ERTYU
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'ERTYU') %>

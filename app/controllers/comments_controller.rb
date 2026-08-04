@@ -37,7 +37,7 @@ class CommentsController < ApplicationController
 
     @comment = current_user.created_comments.build(create_params)
       if @comment.save
-        flash.now[:notice] = "Sucessfully created Comment"
+        flash.now[:notice] = "Sucessfully created Comment!"
         respond_to do |format|
           format.turbo_stream
           format.html { head :ok }

@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class FollowshipsTest < ApplicationSystemTestCase
+class LikesTest < ApplicationSystemTestCase
   include Devise::Test::IntegrationHelpers
   test "visiting index" do
     sign_in users(:three)
