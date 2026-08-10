@@ -33,4 +33,28 @@ class PostsTest < ApplicationSystemTestCase
 
     assert_selector "div", text: "MyStringB"
   end
+
+  test "clicking to delete post" do
+    sign_in users(:three)
+
+    visit root_url
+
+    click_on "X"
+
+    assert_no_selector "div", text: "MyTextB"
+  end
+
+  test "editing post" do
+    sign_in users(:three)
+
+    visit root_url
+
+    all(:button, "Edit", exact: true)[0].click
+
+    all("trix-editor", minimum: 2)[1].set("Hello Ruby")
+
+    click_on "Update"
+
+    assert_selector "div", text: "Hello Ruby"
+  end
 end

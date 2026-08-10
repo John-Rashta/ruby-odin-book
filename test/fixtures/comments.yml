@@ -4,6 +4,7 @@ one:
   content: MyStringA
   creator: one
   post: one
+  comments_count: 1
 
 two:
   content: MyStringB

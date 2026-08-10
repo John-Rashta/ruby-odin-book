@@ -3,7 +3,7 @@ class PostCreationBatchJob < ApplicationJob
 
   # Batch broadcast to feeds of followers
   def perform(followers_ids, html)
-    follower_ids.each do |follower_id|
+    followers_ids.each do |follower_id|
       stream_name = "feed-#{follower_id}"
 
       Turbo::StreamsChannel.broadcast_prepend_to(

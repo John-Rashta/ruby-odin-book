@@ -19,6 +19,6 @@ class LikesTest < ApplicationSystemTestCase
 
     click_button "like-button-comment-#{comments(:one).id}"
 
-    assert_selector("button", minimum: 3, maximum: 3)
+    assert_selector("button", minimum: 5, maximum: 5)
   end
 end

@@ -58,4 +58,92 @@ class CommentsTest < ApplicationSystemTestCase
 
     assert_selector "div", text: "MyStringC"
   end
+
+  test "clicking to delete comment in post" do
+    user = users(:one)
+
+    login_as(user, scope: :user)
+
+    visit post_url(posts(:one).id)
+
+    click_on "X"
+
+    assert_no_selector "div", text: "MyStringA"
+  end
+
+  test "clicking to delete comment in comment" do
+    user = users(:one)
+
+    login_as(user, scope: :user)
+
+    visit comment_url(comments(:one).id)
+
+    all(:button, "X", exact: true, minimum: 2)[1].click
+
+    assert_no_selector "div", text: "MyStringC"
+  end
+
+  test "clicking to delete comment of comment in a post show page" do
+    user = users(:one)
+
+    login_as(user, scope: :user)
+
+    visit post_url(posts(:one).id)
+
+    click_on "Show Comments"
+
+    all(:button, "X", exact: true, minimum: 2)[1].click
+
+    assert_no_selector "div", text: "MyStringC"
+  end
+
+  test "editing comment in post" do
+    user = users(:one)
+
+    login_as(user, scope: :user)
+
+    visit post_url(posts(:one).id)
+
+    click_on "Edit"
+
+    all(:field, "comment[content]", minimum: 2)[1].set("Hello Ruby")
+
+    click_on "Update"
+
+    assert_selector "div", text: "Hello Ruby"
+  end
+
+  test "editing comment in comment" do
+    user = users(:one)
+
+    login_as(user, scope: :user)
+
+    visit comment_url(comments(:one).id)
+
+    all(:button, "Edit", exact: true, minimum: 2)[1].click
+
+    all(:field, "comment[content]", minimum: 2)[1].set("Hello Ruby")
+
+    click_on "Update"
+
+    assert_selector "div", text: "Hello Ruby"
+  end
+
+  test "editing comment of comment in a post show page" do
+    user = users(:one)
+
+    login_as(user, scope: :user)
+
+    visit post_url(posts(:one).id)
+
+    click_on "Show Comments"
+
+    all(:button, "Edit", exact: true, minimum: 2)[1].click
+
+    all(:field, "comment[content]", minimum: 2)[1].set("Hello Ruby")
+
+    click_on "Update"
+
+    assert_selector "div", text: "Hello Ruby"
+  end
 end
