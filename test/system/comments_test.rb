@@ -30,7 +30,7 @@ class CommentsTest < ApplicationSystemTestCase
 
       connect_turbo_cable_stream_sources
 
-      visit post_url(comments(:one).id)
+      visit comment_url(comments(:one).id)
 
       connect_turbo_cable_stream_sources
 
@@ -39,6 +39,32 @@ class CommentsTest < ApplicationSystemTestCase
       fill_in "comment[content]", with: "Hello World"
 
       click_on "Create"
+
+      assert_selector "div", text: "Hello World"
+
+      assert_selector "div", text: "Sucessfully created Comment!"
+  end
+
+  test "creating a comment on a comment in a post page" do
+      user = users(:three)
+
+      login_as(user, scope: :user)
+
+      connect_turbo_cable_stream_sources
+
+      visit comment_url(posts(:one).id)
+
+      connect_turbo_cable_stream_sources
+
+      assert_button "Create", disabled: :all
+
+      click_on "Respond"
+
+      all(:field, "comment[content]", minimum: 2)[1].set("Hello World")
+
+      click_on "Create"
+
+      click_on "Show Comments"
 
       assert_selector "div", text: "Hello World"
 
