@@ -20,6 +20,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       visit root_path
     end
 
+    # POST CREATION
     using_session("One") do
       find("trix-editor").set("Hello Interaction")
       click_on "Post"
@@ -32,6 +33,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", text: "Hello Interaction"
     end
 
+    # POST EDIT
     using_session("One") do
       all(:button, "Edit", exact: true)[0].click
       all("trix-editor", minimum: 2)[1].set("Hello Again")
@@ -47,6 +49,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", text: "Hello Again"
     end
 
+    # POST DELETE
     using_session("One") do
       all(:button, "X", exact: true, minimum: 2)[0].click
 
@@ -71,6 +74,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       visit post_url(posts(:one).id)
     end
 
+    # COMMENT CREATION
     using_session("Three") do
       fill_in "comment[content]", with: "Hello Interaction"
 
@@ -83,6 +87,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", text: "Hello Interaction"
     end
 
+    # COMMENT EDIT
     using_session("Three") do
       click_on "Edit"
 
@@ -97,6 +102,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", text: "Hello Again"
     end
 
+    # COMMENT DELETE
     using_session("Three") do
       click_on "X"
 
@@ -119,6 +125,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       visit comment_url(comments(:two).id)
     end
 
+    # COMMENT CREATION
     using_session("Three") do
       fill_in "comment[content]", with: "Hello Interaction"
 
@@ -131,6 +138,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", text: "Hello Interaction"
     end
 
+    # COMMENT EDIT
     using_session("Three") do
       click_on "Edit"
 
@@ -145,6 +153,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", text: "Hello Again"
     end
 
+    # COMMENT DELETE
     using_session("Three") do
       click_on "X"
 
@@ -167,6 +176,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       visit post_url(posts(:one).id)
     end
 
+    # COMMENT CREATION
     using_session("Three") do
       all(:button, "Respond", exact: true)[0].click
 
@@ -185,6 +195,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", text: "Hello Interaction"
     end
 
+    # COMMENT EDIT
     using_session("Three") do
       click_on "Edit"
 
@@ -199,6 +210,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", text: "Hello Again"
     end
 
+    # COMMENT DELETE
     using_session("Three") do
       click_on "X"
 
@@ -211,31 +223,37 @@ class UserInteractionsTest < ApplicationSystemTestCase
   end
 
   test "Requests and Followships Interaction" do
+    # User Page
     using_session("Two") do
       sign_in @two
       visit user_path(users(:four))
     end
 
+    # Sent Requests Page
     using_session("Two Sent") do
       sign_in @two
       visit requests_sent_path
     end
 
+    # Followships Page
     using_session("Two Follows") do
       sign_in @two
       visit followships_path
     end
 
+    # Requests Page
     using_session("Four") do
       sign_in @four
       visit requests_path
     end
 
+    # Followers Page
     using_session("Four Followers") do
       sign_in @four
       visit followships_followers_path
     end
 
+    # Follow and cancel request in user page
     using_session("Two") do
       click_on "Follow"
 
@@ -261,6 +279,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_no_selector "div", text: users(:two).username
     end
 
+    # Updates aren't done for all pages of the person doing them so they still show up - clicking any button will make the server delete them
     using_session("Two Sent") do
       assert_selector "div", text: users(:four).username
       assert_selector "div", exact_text: "follow"
@@ -271,6 +290,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_no_selector "div", exact_text: "follow"
     end
 
+    # Follow and reject request in requests page
     using_session("Two") do
       click_on "Follow"
 
@@ -299,6 +319,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_no_selector "div", exact_text: "follow"
     end
 
+    # Follow and cancel request on sent requests page
     using_session("Two") do
       click_on "Follow"
 
@@ -331,6 +352,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", exact_text: "Follow"
     end
 
+    # Follow and accept request and stop following in Followships Page
     using_session("Two") do
       click_on "Follow"
 
@@ -385,6 +407,7 @@ class UserInteractionsTest < ApplicationSystemTestCase
       assert_selector "div", exact_text: "Follow"
     end
 
+    # Follow and accept request and stop following in User Page
     using_session("Two") do
       click_on "Follow"
 
