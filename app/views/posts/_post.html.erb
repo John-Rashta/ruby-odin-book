@@ -1,61 +1,84 @@
-<div id="post-<%= post.id %>" class="<%= local_assigns[:class] || ""%>" data-controller="edit-visibility">
+<div id="post-<%= post.id %>" class="flex gap-3 <%= local_assigns[:class] || ""%>" data-controller="edit-visibility">
     <%= turbo_stream_from "post-#{post.id}" %>
-    <div class="hidden" data-edit-visibility-target="editDiv" id="edit-content-post-<%= post.id %>">
-        <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
-            <%= form_with model: post, method: :patch, data: { controller: :form } do |form| %>
-                <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
-                    form_target: "field",
-                    action: "input->form#disableIfEmptyFields"
-                }  %>
-                <%= form.rich_textarea :content, value: post.try(:postable).try(:content), data: {
-                    form_target: "field",
-                    action: "input->form#disableIfEmptyFields trix-attachment-add->form#disableIfEmptyFields trix-attachment-remove->form#disableIfEmptyFields"
-                } %>
-                <%= form.submit "Update", data: {
-                    form_target: "submit",
-                } %>
+    <% unless local_assigns[:class] && local_assigns[:class].include?("show-element") %>
+        <div>
+            <%= link_to user_path(post.creator.id), class: "content-link",
+            data: { turbo_frame: "_top" } do %>
+                <img src="<%= post.creator.avatar.attached? ? url_for(post.creator.avatar) : post.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12">
             <% end %>
-            <button data-action="click->edit-visibility#hide">Cancel</button>
-        <% end %>
-    </div>
-    <div data-edit-visibility-target="mainDiv" id="main-content-post-<%= post.id %>">
-        <%# Options are added if it's a new post (they are sent hidden and it gets removed on frontend if he is the creator) or if the current user is the creator %>
-        <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
-        <div class="<%= local_assigns[:just_created] ? "hidden" : "" %>" <%= tag.attributes(
-            data: ({
-                controller: "options",
-                "options-creatorid-value" => post.creator.id
-            } if local_assigns[:just_created]
-            )
-        )%>>
-            <%= button_to "X", post_path(post.id) , method: "delete" %>
-            <button data-action="click->edit-visibility#show">Edit</button>
         </div>
-        <% end %>
-        <%= link_to user_path(post.creator.id), class: "content-link",
-        data: { turbo_frame: "_top" } do %>
-            <img src="<%= post.creator.avatar.attached? ? url_for(post.creator.avatar) : post.creator.avatar_url %>" alt="">
-        <% end %>
-        <%= link_to user_path(post.creator.id), class: "content-link",
-        data: { turbo_frame: "_top" } do %>
-            <div class="content-link-user-name"> <%= post.creator.username %> </div>
-        <% end %>
-        <%= link_to post_path(post.id), class: "content-link #{local_assigns[:class] && local_assigns[:class].include?("show-element") ? "content-link-disabled" : ""}", 
-        data: { turbo_frame: "_top" } do %>
-            <div id="post-content-<%= post.id %>" class="content-container">
-                <% if post.postable_type == "PostImage" %>
-                    <%= image_tag post.postable.image %>
-                <% else %>
-                    <%= post.postable&.content %>
+    <% end %>
+    <div class="grow max-w-150">
+        <div class="hidden" data-edit-visibility-target="editDiv" id="edit-content-post-<%= post.id %>">
+            <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
+                <%= form_with model: post, method: :patch, data: { controller: :form } do |form| %>
+                    <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
+                        form_target: "field",
+                        action: "input->form#disableIfEmptyFields"
+                    }  %>
+                    <%= form.rich_textarea :content, value: post.try(:postable).try(:content), data: {
+                        form_target: "field",
+                        action: "input->form#disableIfEmptyFields trix-attachment-add->form#disableIfEmptyFields trix-attachment-remove->form#disableIfEmptyFields"
+                    } %>
+                    <%= form.submit "Update", data: {
+                        form_target: "submit",
+                    } %>
+                <% end %>
+                <button data-action="click->edit-visibility#hide">Cancel</button>
+            <% end %>
+        </div>
+        <div data-edit-visibility-target="mainDiv" id="main-content-post-<%= post.id %>" class="flex flex-col gap-10">
+            <%# Options are added if it's a new post (they are sent hidden and it gets removed on frontend if he is the creator) or if the current user is the creator %>
+            <div class="flex justify-between">
+                <div class="flex">
+                    <% if local_assigns[:class] && local_assigns[:class].include?("show-element") %>
+                        <%= link_to user_path(post.creator.id), class: "content-link",
+                        data: { turbo_frame: "_top" } do %>
+                            <img src="<%= post.creator.avatar.attached? ? url_for(post.creator.avatar) : post.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12">
+                        <% end %>
+                    <% end %>
+                    <%= link_to user_path(post.creator.id), class: "content-link",
+                    data: { turbo_frame: "_top" } do %>
+                        <div class="content-link-user-name"> <%= post.creator.username %> </div>
+                    <% end %>
+                </div>
+                <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
+                    <div class="flex justify-end gap-5 <%= local_assigns[:just_created] ? "hidden" : "" %>" <%= tag.attributes(
+                        data: ({
+                            controller: "options",
+                            "options-creatorid-value" => post.creator.id
+                        } if local_assigns[:just_created]
+                        )
+                    )%>>
+                        <button data-action="click->edit-visibility#show">Edit</button>
+                        <%= button_to "X", post_path(post.id) , method: "delete" %>
+                    </div>
                 <% end %>
             </div>
-        <% end %>
-        <% if current_user %>
-            <div id="like-post-<%= post.id %>">
-                <%= render partial: "application/likeform", locals: {just_created: local_assigns[:just_created], content: post, type: "post" } %>
+            <%= link_to post_path(post.id), class: "content-link #{local_assigns[:class] && local_assigns[:class].include?("show-element") ? "content-link-disabled" : ""}", 
+            data: { turbo_frame: "_top" } do %>
+                <div id="post-content-<%= post.id %>" class="content-container">
+                    <% if post.postable_type == "PostImage" %>
+                        <%= image_tag post.postable.image, class: "max-h-125" %>
+                    <% else %>
+                        <%= post.postable&.content %>
+                    <% end %>
+                </div>
+            <% end %>
+            <div class="flex justify-between">
+                <div class="flex gap-3">
+                    <% if current_user %>
+                        <div id="likes-post-number-<%= post.id %>"> <%= post.likes_count %> </div>
+                        <div id="like-post-<%= post.id %>">
+                            <%= render partial: "application/likeform", locals: {just_created: local_assigns[:just_created], content: post, type: "post" } %>
+                        </div>
+                    <% end %>
+                </div>
+                <div class="flex gap-3">
+                    <div id="comments-post-number-<%= post.id %>"> <%= post.comments_count %> </div>
+                    <%= icon "message-square" %>
+                </div>
             </div>
-        <% end %>
-        <div id="likes-post-number-<%= post.id %>"> <%= post.likes_count %> </div>
-        <div id="comments-post-number-<%= post.id %>"> <%= post.comments_count %> </div>
+        </div>
     </div>
 </div>
