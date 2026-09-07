@@ -1,4 +1,4 @@
-<div id="post-<%= post.id %>" class="flex gap-3 <%= local_assigns[:class] || ""%>" data-controller="edit-visibility">
+<div id="post-<%= post.id %>" class="justify-center mb-[-2px] p-5 border-b-2 border-t-2 flex gap-3 <%= local_assigns[:class] || ""%>" data-controller="edit-visibility">
     <%= turbo_stream_from "post-#{post.id}" %>
     <% unless local_assigns[:class] && local_assigns[:class].include?("show-element") %>
         <div>
