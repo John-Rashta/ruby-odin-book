@@ -1,13 +1,13 @@
 <main>
     <%= form_with url: users_path, method: :get, 
-                data: { controller: "searchbar", turbo_stream: true } do |form| %>
+                data: { controller: "searchbar", turbo_stream: true }, class: "p-5 flex justify-center" do |form| %>
     <div>
         <%= form.text_field :search,
                             value: @search_params,
-                            data: { action: "input->searchbar#submit" } %>
+                            data: { action: "input->searchbar#submit" }, class: "p-2 border-2 text-lg max-w-100 w-100" %>
     </div>
     <% end %>
-    <div id="users-index">
+    <div id="users-index" class="flex flex-col items-center">
         <%= render @users %>
     </div>
     <% if @pagy.next.present? %>

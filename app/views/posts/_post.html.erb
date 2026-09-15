@@ -4,7 +4,7 @@
         <div>
             <%= link_to user_path(post.creator.id), class: "content-link",
             data: { turbo_frame: "_top" } do %>
-                <img src="<%= post.creator.avatar.attached? ? url_for(post.creator.avatar) : post.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12">
+                <img src="<%= post.creator.avatar.attached? ? url_for(post.creator.avatar) : post.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12 rounded-full">
             <% end %>
         </div>
     <% end %>
@@ -34,7 +34,7 @@
                     <% if local_assigns[:class] && local_assigns[:class].include?("show-element") %>
                         <%= link_to user_path(post.creator.id), class: "content-link",
                         data: { turbo_frame: "_top" } do %>
-                            <img src="<%= post.creator.avatar.attached? ? url_for(post.creator.avatar) : post.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12">
+                            <img src="<%= post.creator.avatar.attached? ? url_for(post.creator.avatar) : post.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12 rounded-full">
                         <% end %>
                     <% end %>
                     <%= link_to user_path(post.creator.id), class: "content-link",

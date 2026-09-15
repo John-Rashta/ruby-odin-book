@@ -1,5 +1,5 @@
 <% if @request.table_type == "follow" && @request.sender_id == current_user.id %>
     <%= turbo_stream.update "user-followship-#{@request.user_id}" do %>
-        <%= button_to "Cancel Request", request_path(@request.id) , method: "delete", params: {request: {user_id: @request.user_id}} %>
+        <%= button_to "Cancel Request", request_path(@request.id) , method: "delete", params: {request: {user_id: @request.user_id}}, class: "border-2 rounded-lg p-1" %>
     <% end %>
 <% end %>

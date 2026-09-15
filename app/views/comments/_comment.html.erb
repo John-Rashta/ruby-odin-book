@@ -2,9 +2,11 @@
 <div id="comment-<%= comment.id %>" class="p-5 flex gap-3 <%= local_assigns[:class] || ""%>" data-controller="edit-visibility">
     <%= turbo_stream_from "comment-#{comment.id}" %>
     <div>
-        <%= link_to user_path(comment.creator.id), class: "content-link",
-        data: { turbo_frame: "_top" } do %>
-            <img src="<%= comment.creator.avatar.attached? ? url_for(comment.creator.avatar) : comment.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12">
+        <% unless local_assigns[:class] && local_assigns[:class].include?("show-element") %>
+            <%= link_to user_path(comment.creator.id), class: "content-link",
+            data: { turbo_frame: "_top" } do %>
+                <img src="<%= comment.creator.avatar.attached? ? url_for(comment.creator.avatar) : comment.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12 rounded-full">
+            <% end %>
         <% end %>
     </div>
     <div class="grow max-w-150">
@@ -26,6 +28,12 @@
             <%# Options are added if it's a new comment (they are sent hidden and it gets removed on frontend if he is the creator) or if the current user is the creator %>
             <div class="flex justify-between">
                 <div class="flex">
+                    <% if local_assigns[:class] && local_assigns[:class].include?("show-element") %>
+                        <%= link_to user_path(comment.creator.id), class: "content-link",
+                        data: { turbo_frame: "_top" } do %>
+                            <img src="<%= comment.creator.avatar.attached? ? url_for(comment.creator.avatar) : comment.creator.avatar_url %>" alt="" class="w-12 h-12 max-w-12 max-h-12 rounded-full">
+                        <% end %>
+                    <% end %>
                     <%= link_to user_path(comment.creator.id), class: "content-link",
                     data: { turbo_frame: "_top" } do %>
                         <div class="content-link-user-name"> <%= comment.creator.username %> </div>
