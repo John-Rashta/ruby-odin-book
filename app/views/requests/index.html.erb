@@ -1,6 +1,6 @@
-<main>
+<main class="pt-5 flex flex-col items-center" >
     <%= turbo_stream_from "requests-#{current_user.id}" %>
-    <%= link_to "Sent Requests", requests_sent_path %>
+    <%= link_to "To Sent Requests", requests_sent_path, class: "border-2 rounded-lg p-1 border-amber-600" %>
     <div id="requests-<%= current_user.id %>">
         <%= render @requests%>
     </div>
