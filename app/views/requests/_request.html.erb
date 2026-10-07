@@ -1,10 +1,15 @@
-<div id="request-<%= request.id%>">
+<div class="flex gap-5 p-8 border-1" id="request-<%= request.id%>">
     <div> <%= request.table_type %> </div>
-    <div> <%= request.user.id == current_user.id ? request.sender.username : request.user.username %> </div>
+    <%= link_to user_path(request.user.id == current_user.id ? request.sender.id : request.user.id), class: "content-link",
+    data: { turbo_frame: "_top" } do %>
+        <div class="content-link-user-name"> <%= request.user.id == current_user.id ? request.sender.username : request.user.username %> </div>
+    <% end %>
     <% if request.user.id == current_user.id %>
         <% if request.table_type == "follow" %>
-            <%= button_to "Accept Request", followships_path , method: "post", params: {request: {id: request.id, user_id: request.sender_id}} %>
+            <%= button_to "Accept Request", followships_path , method: "post", params: {request: {id: request.id, user_id: request.sender_id}},
+            class: "hover:underline hover:cursor-pointer" %>
         <% end %>
     <% end %>
-    <%= button_to "#{request.user.id == current_user.id ? "Reject Request" : "Cancel Request"}", request_path(request.id) , method: "delete", params: { request: { user_id: request.user_id == current_user.id ? request.sender_id : request.user_id } } %>
-</div>
+    <%= button_to "#{request.user.id == current_user.id ? "Reject Request" : "Cancel Request"}", request_path(request.id) , method: "delete", params: { request: { user_id: request.user_id == current_user.id ? request.sender_id : request.user_id } },
+    class: "hover:underline hover:cursor-pointer" %>
+</div>  
