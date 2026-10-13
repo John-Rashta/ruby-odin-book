@@ -13,24 +13,29 @@
             <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
                 <%= form_with model: post, method: :patch, data: { controller: :form } do |form| %>
                     <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
-                        form_target: "field",
+                        form_target: "field fieldClear",
                         action: "input->form#disableIfEmptyFields"
                     }  %>
+                    <button type="button" data-action="click->form#clearFields">Clear File</button>
                     <%= form.rich_textarea :content, value: post.try(:postable).try(:content), data: {
                         form_target: "field",
                         action: "input->form#disableIfEmptyFields trix-attachment-add->form#disableIfEmptyFields trix-attachment-remove->form#disableIfEmptyFields"
                     } %>
-                    <%= form.submit "Update", data: {
+                    <div class="flex justify-between">
+                        <%= form.submit "Update", data: {
                         form_target: "submit",
-                    } %>
+                        } %>
+                        <%= form.button "Cancel", type: "button", data: {
+                            action: "click->edit-visibility#hide"
+                        } %>
+                    </div>
                 <% end %>
-                <button data-action="click->edit-visibility#hide">Cancel</button>
             <% end %>
         </div>
         <div data-edit-visibility-target="mainDiv" id="main-content-post-<%= post.id %>" class="flex flex-col gap-10">
             <%# Options are added if it's a new post (they are sent hidden and it gets removed on frontend if he is the creator) or if the current user is the creator %>
             <div class="flex justify-between">
-                <div class="flex">
+                <div class="flex gap-3">
                     <% if local_assigns[:class] && local_assigns[:class].include?("show-element") %>
                         <%= link_to user_path(post.creator.id), class: "content-link",
                         data: { turbo_frame: "_top" } do %>
@@ -43,7 +48,7 @@
                     <% end %>
                 </div>
                 <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
-                    <div class="flex justify-end gap-5 <%= local_assigns[:just_created] ? "hidden" : "" %>" <%= tag.attributes(
+                    <div class="flex justify-end gap-5 items-start <%= local_assigns[:just_created] ? "hidden" : "" %>" <%= tag.attributes(
                         data: ({
                             controller: "options",
                             "options-creatorid-value" => post.creator.id
