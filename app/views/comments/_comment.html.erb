@@ -93,30 +93,30 @@
                     </div>
                 <% end %>
             </div>
-            <% unless local_assigns[:no_response] %>
-                <%# Comments depth in comment section only goes up to 5 - after that it's just a link to the comment %>
-                <% if depth < 5 %>
-                <div id="comments-main-<%= comment.id %>" class="<%= comment.comments_count > 0 ? "" : "hidden" %>" data-controller="comments-visibility" data-comments-visibility-target="commentMain">
-                        <div class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="commentSection">
-                            <div id="comment-comments-<%=  comment.id %>" data-comments-visibility-target="commentsContainer">
-                            </div>
-                        <%# This div get's updated with the load button if there are more comments else it's empty %>
-                            <div id="load-more-<%= comment.id %>">
-                            </div>
-                        </div>
-                        <div>
-                            <% if comment.comments_count > 0 %>
-                                <%= button_to "Show #{comment.comments_count} #{"Comment".pluralize(comment.comments_count)}", comment_comments_part_path(comment.id, format: :turbo_stream), params: { first: "true", depth: depth + 1 }, method: "get", form: {id: "show-button-#{comment.id}" } %>
-                            <% else %>
-                                <button id="show-button-<%= comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
-                            <% end %>
-                            <button class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#hide">Hide Comments</button>
-                        </div>
-                </div>
-                <% else %>
-                    <%= button_to "Go to Comment", comment_path(comment.id), method: "get", form: { data: { turbo_frame: "_top" } } %>
-                <% end %>
-            <%end %>
         </div>
+        <% unless local_assigns[:no_response] %>
+            <%# Comments depth in comment section only goes up to 5 - after that it's just a link to the comment %>
+            <% if depth < 5 %>
+            <div id="comments-main-<%= comment.id %>" class="<%= comment.comments_count > 0 ? "" : "hidden" %>" data-controller="comments-visibility" data-comments-visibility-target="commentMain">
+                    <div class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="commentSection">
+                        <div id="comment-comments-<%=  comment.id %>" data-comments-visibility-target="commentsContainer">
+                        </div>
+                    <%# This div get's updated with the load button if there are more comments else it's empty %>
+                        <div id="load-more-<%= comment.id %>">
+                        </div>
+                    </div>
+                    <div>
+                        <% if comment.comments_count > 0 %>
+                            <%= button_to "Show #{comment.comments_count} #{"Comment".pluralize(comment.comments_count)}", comment_comments_part_path(comment.id, format: :turbo_stream), params: { first: "true", depth: depth + 1 }, method: "get", form: {id: "show-button-#{comment.id}" } %>
+                        <% else %>
+                            <button id="show-button-<%= comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
+                        <% end %>
+                        <button class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#hide">Hide Comments</button>
+                    </div>
+            </div>
+            <% else %>
+                <%= button_to "Go to Comment", comment_path(comment.id), method: "get", form: { data: { turbo_frame: "_top" } } %>
+            <% end %>
+        <%end %>
     </div>
 </div>

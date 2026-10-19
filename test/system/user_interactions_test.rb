@@ -184,13 +184,13 @@ class UserInteractionsTest < ApplicationSystemTestCase
 
       all(:button, "Create", exact: true)[0].click
 
-      all(:button, "Show Comments", exact: true)[0].click
+      all(:button, "Show 1 Comment", exact: true)[0].click
 
       assert_selector "div", text: "Hello Interaction"
     end
 
     using_session("One") do
-      all(:button, "Show Comments", exact: true)[0].click
+      all(:button, "Show 1 Comment", exact: true)[0].click
 
       assert_selector "div", text: "Hello Interaction"
     end

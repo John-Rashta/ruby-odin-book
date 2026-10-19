@@ -116,7 +116,7 @@ class CommentsTest < ApplicationSystemTestCase
 
     visit post_url(posts(:one).id)
 
-    click_on "Show Comments"
+    click_on "Show 1 Comment"
 
     all(:button, "X", exact: true, minimum: 2)[1].click
 
@@ -162,7 +162,7 @@ class CommentsTest < ApplicationSystemTestCase
 
     visit post_url(posts(:one).id)
 
-    click_on "Show Comments"
+    click_on "Show 1 Comment"
 
     all(:button, "Edit", exact: true, minimum: 2)[1].click
 
