@@ -11,12 +11,14 @@
     <div class="grow max-w-150">
         <div class="hidden" data-edit-visibility-target="editDiv" id="edit-content-post-<%= post.id %>">
             <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
-                <%= form_with model: post, method: :patch, data: { controller: :form } do |form| %>
-                    <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
+                <%= form_with model: post, method: :patch, data: { controller: :form }, class: "flex flex-col" do |form| %>
+                    <div>
+                        <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
                         form_target: "field fieldClear",
                         action: "input->form#disableIfEmptyFields"
-                    }  %>
-                    <button type="button" data-action="click->form#clearFields">Clear File</button>
+                        }  %>
+                        <button type="button" data-action="click->form#clearFields">Clear File</button>
+                    </div>
                     <%= form.rich_textarea :content, value: post.try(:postable).try(:content), data: {
                         form_target: "field",
                         action: "input->form#disableIfEmptyFields trix-attachment-add->form#disableIfEmptyFields trix-attachment-remove->form#disableIfEmptyFields"

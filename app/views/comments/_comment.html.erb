@@ -10,18 +10,20 @@
         <% end %>
     </div>
     <div class="grow <%= local_assigns[:class] && local_assigns[:class].include?("show-element") && "justify-center flex"%>">
-        <div class="hidden w-150" data-edit-visibility-target="editDiv" id="edit-content-comment-<%= comment.id %>">
+        <div class="hidden flex grow" data-edit-visibility-target="editDiv" id="edit-content-comment-<%= comment.id %>">
             <% if local_assigns[:just_created] || current_user && current_user.id == comment.creator.id  %>
-                <%= form_with model: comment, method: :patch, data: { controller: :form } do |form| %>
-                    <%= form.textarea :content, size: "5x5", value: comment.content, data: {
+                <%= form_with model: comment, method: :patch, data: { controller: :form }, class: "flex flex-col grow" do |form| %>
+                    <%= form.textarea :content, size: "25x5", value: comment.content, class: "p-2 p-[5px] border-[2px] rounded-[5px]", data: {
                         form_target: "field",
                         action: "input->form#disableIfEmptyFields"
                     } %>
-                    <%= form.submit "Update", data: {
+                    <div class="flex justify-between">
+                        <%= form.submit "Update", data: {
                         form_target: "submit",
-                    } %>
+                        } %>
+                        <button type="button" data-action="click->edit-visibility#hide">Cancel</button>
+                    </div>
                 <% end %>
-                <button data-action="click->edit-visibility#hide">Cancel</button>
             <% end %>
         </div>
         <div data-edit-visibility-target="mainDiv" id="main-content-comment-<%= comment.id %>" class="flex flex-col gap-10">

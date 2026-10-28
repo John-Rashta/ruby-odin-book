@@ -1,7 +1,9 @@
 <main>
     <%= turbo_stream_from "posts-#{@user.id}" %>
     <%= link_to "Back", "javascript:history.back()" %>
-    <%= render @user, class: "show-element" %>
+    <div class="flex justify-center pb-5">
+        <%= render @user, class: "show-element" %>
+    </div>
     <div id="posts-<%= @user.id %>">
         <%= render partial: "posts/post", collection: @posts %>
     </div>
