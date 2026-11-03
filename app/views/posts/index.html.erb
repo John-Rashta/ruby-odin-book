@@ -1,18 +1,18 @@
 <main>
     <%= turbo_stream_from "feed-#{current_user.id}" %>
-    <%= form_with model: Post.new, data: { controller: "form", action: "turbo:submit-end->form#clear" } do |form| %>
+    <%= form_with model: Post.new, data: { controller: "form", action: "turbo:submit-end->form#clear" }, class: "p-3" do |form| %>
         <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
             form_target: "field fieldClear",
             action: "input->form#disableIfEmptyFields change->form#disableIfEmptyFields",
-        }  %>
-        <button type="button" data-action="click->form#clearFields">Clear File</button>
+        }, class: "mb-[5px] border-1 p-1 rounded-md bg-mist-200/60"  %>
+        <button type="button" data-action="click->form#clearFields" class="p-1 pr-2 pl-2 border-1 mt-[5px] bg-mist-200/60">Clear File</button>
         <%= form.rich_textarea :content, data: {
             form_target: "field",
             action: "input->form#disableIfEmptyFields trix-attachment-add->form#disableIfEmptyFields trix-attachment-remove->form#disableIfEmptyFields"
-        } %>
+        }, class: "" %>
         <%= form.submit "Post", data: {
-            form_target: "submit",
-        } %>
+            form_target: "submit"
+        }, class: "p-1 pr-2 pl-2 border-2 mt-[5px] font-bold" %>
     <% end %>
     <div id="feed-<%= current_user.id %>">
         <%= render @posts%>

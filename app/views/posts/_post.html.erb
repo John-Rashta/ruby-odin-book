@@ -16,8 +16,8 @@
                         <%= form.file_field :image, accept: "image/png,image/jpeg,image/jpg,image/webp", data: {
                         form_target: "field fieldClear",
                         action: "input->form#disableIfEmptyFields"
-                        }  %>
-                        <button type="button" data-action="click->form#clearFields">Clear File</button>
+                        }, class: "mb-[5px] border-1 p-1 rounded-md bg-mist-200/60"  %>
+                        <button type="button" data-action="click->form#clearFields" class="p-1 pr-2 pl-2 border-1 mt-[5px] bg-mist-200/60">Clear File</button>
                     </div>
                     <%= form.rich_textarea :content, value: post.try(:postable).try(:content), data: {
                         form_target: "field",
@@ -26,10 +26,10 @@
                     <div class="flex justify-between">
                         <%= form.submit "Update", data: {
                         form_target: "submit",
-                        } %>
+                        }, class: "p-1 pr-2 pl-2 border-2 mt-[5px] font-bold" %>
                         <%= form.button "Cancel", type: "button", data: {
                             action: "click->edit-visibility#hide"
-                        } %>
+                        }, class: "p-1 pr-2 pl-2 border-2 mt-[5px] font-bold" %>
                     </div>
                 <% end %>
             <% end %>
@@ -46,7 +46,7 @@
                     <% end %>
                     <%= link_to user_path(post.creator.id), class: "content-link",
                     data: { turbo_frame: "_top" } do %>
-                        <div class="content-link-user-name"> <%= post.creator.username %> </div>
+                        <div class="content-link-user-name font-semibold"> <%= post.creator.username %> </div>
                     <% end %>
                 </div>
                 <% if local_assigns[:just_created] || current_user && current_user.id == post.creator.id  %>
@@ -57,8 +57,8 @@
                         } if local_assigns[:just_created]
                         )
                     )%>>
-                        <button data-action="click->edit-visibility#show">Edit</button>
-                        <%= button_to "X", post_path(post.id) , method: "delete" %>
+                        <button data-action="click->edit-visibility#show" class="p-1 pl-2 pr-2 hover:bg-zinc-200 font-semibold">Edit</button>
+                        <%= button_to "X", post_path(post.id) , method: "delete", class: "p-1 pl-3 pr-3 hover:bg-zinc-200 font-semibold" %>
                     </div>
                 <% end %>
             </div>
