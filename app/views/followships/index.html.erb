@@ -1,6 +1,6 @@
 <main class="pt-5 flex flex-col items-center">
     <%= turbo_stream_from "followships-#{current_user.id}" %>
-    <%= link_to "To Followers", followships_followers_path, class: "border-2 rounded-lg p-1 border-amber-600" %>
+    <%= link_to "To Followers", followships_followers_path, class: "border-2 rounded-lg p-1 border-amber-600 text-lg font-semibold" %>
     <div id="followships-<%= current_user.id %>">
         <%= render partial: "users/user", collection: @follows, locals: {custom_start: "follows-user-"} %>
     </div>

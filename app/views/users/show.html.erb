@@ -1,6 +1,8 @@
 <main>
     <%= turbo_stream_from "posts-#{@user.id}" %>
-    <%= link_to "Back", "javascript:history.back()" %>
+    <div class="p-[5px]">
+        <%= link_to "Back", "javascript:history.back()", class: "p-[2px] border-[2px] rounded-[5px] font-semibold" %>
+    </div>
     <div class="flex justify-center pb-5">
         <%= render @user, class: "show-element" %>
     </div>

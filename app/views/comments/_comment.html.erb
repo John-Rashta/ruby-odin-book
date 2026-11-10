@@ -20,8 +20,8 @@
                     <div class="flex justify-between">
                         <%= form.submit "Update", data: {
                         form_target: "submit",
-                        } %>
-                        <button type="button" data-action="click->edit-visibility#hide">Cancel</button>
+                        }, class: "p-1 pr-2 pl-2 border-2 mt-[5px] font-semibold rounded-xl mb-[5px]" %>
+                        <button type="button" data-action="click->edit-visibility#hide" class="p-1 pr-2 pl-2 border-2 mb-[5px] mt-[5px] font-semibold rounded-xl">Cancel</button>
                     </div>
                 <% end %>
             <% end %>
@@ -38,7 +38,7 @@
                     <% end %>
                     <%= link_to user_path(comment.creator.id), class: "content-link",
                     data: { turbo_frame: "_top" } do %>
-                        <div class="content-link-user-name"> <%= comment.creator.username %> </div>
+                        <div class="content-link-user-name font-semibold"> <%= comment.creator.username %> </div>
                     <% end %>
                 </div>
                 <% if local_assigns[:just_created] || current_user && current_user.id == comment.creator.id  %>
@@ -49,8 +49,8 @@
                         } if local_assigns[:just_created]
                         )
                     )%>>
-                        <button data-action="click->edit-visibility#show">Edit</button>
-                        <%= button_to "X", comment_path(comment.id) , method: "delete" %>
+                        <button data-action="click->edit-visibility#show" class="p-1 pl-2 pr-2 hover:bg-zinc-200 font-semibold">Edit</button>
+                        <%= button_to "X", comment_path(comment.id) , method: "delete", class: "p-1 pl-3 pr-3 hover:bg-zinc-200 font-semibold" %>
                     </div>
                 <% end %>
             </div>
@@ -66,7 +66,7 @@
                     )%>>
                 <div class="flex justify-between w-150">
                     <% unless local_assigns[:no_response] %>
-                        <button data-action="click->visibility#show">Respond</button>
+                        <button data-action="click->visibility#show" class="font-medium p-1 pl-2 pr-2 hover:bg-zinc-200 rounded-xl mb-[5px]">Respond</button>
                     <% end %>
                     <div class="flex gap-3">
                         <% if current_user %>
@@ -88,8 +88,8 @@
                             <div class="flex justify-between">
                                 <%= form.submit "Create", data: {
                                 form_target: "submit",
-                                } %>
-                                <%= button_tag "Cancel", type: :button, data: { action: "click->visibility#hide"} %>
+                                }, class: "p-1 pr-2 pl-2 border-2 mt-[5px] font-semibold rounded-xl mb-[5px]" %>
+                                <%= button_tag "Cancel", type: :button, data: { action: "click->visibility#hide"}, class: "p-1 pr-2 pl-2 border-2 mt-[5px] font-semibold rounded-xl mb-[5px]" %>
                             </div>
                         <% end %>
                     </div>
@@ -109,15 +109,16 @@
                     </div>
                     <div>
                         <% if comment.comments_count > 0 %>
-                            <%= button_to "Show #{comment.comments_count} #{"Comment".pluralize(comment.comments_count)}", comment_comments_part_path(comment.id, format: :turbo_stream), params: { first: "true", depth: depth + 1 }, method: "get", form: {id: "show-button-#{comment.id}" } %>
+                            <%= button_to "Show #{comment.comments_count} #{"Comment".pluralize(comment.comments_count)}", comment_comments_part_path(comment.id, format: :turbo_stream), params: { first: "true", depth: depth + 1 }, method: "get", form: {id: "show-button-#{comment.id}" },
+                            class: "font-medium p-1 pl-2 pr-2 hover:bg-zinc-200 rounded-xl mt-[5px]" %>
                         <% else %>
-                            <button id="show-button-<%= comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show">Show Comments</button>
+                            <button id="show-button-<%= comment.id %>" data-comments-visibility-target="showButton" data-action="click->comments-visibility#show" class="font-medium p-1 pl-2 pr-2 hover:bg-zinc-200 rounded-xl mt-[5px]">Show Comments</button>
                         <% end %>
-                        <button class="hidden comment-visibility-1-<%= comment.id %>" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#hide">Hide Comments</button>
+                        <button class="hidden comment-visibility-1-<%= comment.id %> font-medium p-1 pl-2 pr-2 hover:bg-zinc-200 rounded-xl mt-[5px]" data-comments-visibility-target="hideButton" data-action="click->comments-visibility#hide">Hide Comments</button>
                     </div>
             </div>
             <% else %>
-                <%= button_to "Go to Comment", comment_path(comment.id), method: "get", form: { data: { turbo_frame: "_top" } } %>
+                <%= button_to "Go to Comment", comment_path(comment.id), method: "get", form: { data: { turbo_frame: "_top" } }, class: "font-medium hover:underline hover:bg-zinc-200 mt-[5px] p-1 pl-2 pr-2 rounded-xl" %>
             <% end %>
         <%end %>
     </div>

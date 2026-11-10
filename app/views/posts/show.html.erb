@@ -1,16 +1,18 @@
 <main>
     <%= turbo_stream_from "post-show-#{@post.id}" %>
-    <%= link_to "Back", "javascript:history.back()" %>
+    <div class="p-[5px]">
+        <%= link_to "Back", "javascript:history.back()", class: "p-[2px] border-[2px] rounded-[5px] font-semibold" %>
+    </div>
     <%= render @post, class: "show-element" %>
     <%= form_with model: Comment.new, url: post_comments_path(@post.id), data: { controller: :form, action: "turbo:submit-end->form#clear" },
-    class: "flex flex-col items-start p-5" do |form| %>
-        <%= form.textarea :content, size: "50x3", class: "p-2 p-[5px] border-[2px] rounded-[5px]", data: {
+    class: "flex flex-col items-start p-5 gap-[5px]" do |form| %>
+        <%= form.textarea :content, size: "50x3", class: "p-[5px] border-[2px] rounded-[5px]", data: {
                 form_target: "field",
                 action: "input->form#disableIfEmptyFields"
             } %>
         <%= form.submit "Create", data: {
                 form_target: "submit",
-            } %>
+            }, class: "p-[2px] border-[2px] rounded-[5px] font-semibold" %>
     <% end %>
     <div id="post-comments-<%= @post.id %>">
         <%= render partial: "comments/comment", collection: @direct_comments %>
